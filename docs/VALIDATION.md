@@ -79,3 +79,16 @@ See [update report](UPDATE-1.145.0.md). Exact downloaded archive tested with pac
 - Native folder expansion/compaction and navigation retained. File-theme limitations for Java interface/enum files are documented.
 - CSS chrome revision remains 0.4.1, matching the current installed workbench; icons are API-level changes and introduce no new installation-file patch.
 - Independent read-only review found no important issue and reran all 22 tests.
+
+## 0.5.0 stability — 2026-11-06
+
+- Full suite: 35 tests pass. New cases cover upgrade preservation and ownership release across later upgrades, explicit Apply undo rebasing, one-write palette Apply/Restore, failed/partially successful writes, same-version reinstall recovery, exact CSS comparison, damaged marker refusal, pending reload transitions, provider backoff and cooldown while editing.
+- Independent reviewer found two P2 recovery cases: deleted configured logo blocked Restore, and settings failure after CSS removal lost pending reload state. Both were reproduced red in lifecycle tests before fixes, then passed with the full suite.
+- Real packaged VSIX in normal isolated VS Code 1.145.0: seeded 0.4.2 state, user theme/icon changes, cursor color edit and deleted tab color. Upgrade to 0.5.0 retained all those choices; native VS Code normalized the default theme label to Dark Modern. Palette tombstones persisted.
+- Removed owned CSS from the disposable app without changing VS Code or extension versions. On restart, the same fingerprint with prior applied outcome automatically recovered CSS. API settings remained unchanged.
+- Clicked native **IDEA: Reload UI** status action in the disposable app. The window/extension host reloaded, pending state cleared, status became CSS installed, actual style element and gradient were present. No full application restart was needed for this CSS reload.
+- Persistence checker: `node test/stability-check.cjs` against the prepared disposable profile. User app/profile were not used for lifecycle mutations.
+- Important test finding: the Extension Host test runner in this build used in-memory global storage, so it cannot validate SQLite-seeded upgrade ownership. Regular-process packaged testing replaced that invalid harness. See [.github test instructions](../.github/instructions/testing.instructions.md).
+- Pure fake-clock tests validate provider retry behavior; no claim that external Java failures are fixed. Linux authentication implementation remains the existing PolicyKit flow; no fresh real administrator prompt was forced during this stability test.
+
+Limits: Windows/macOS authorization, minimum VS Code 1.95, and simultaneous multi-profile patch contention are not newly verified. Shared installation patch and its integrity warning remain.

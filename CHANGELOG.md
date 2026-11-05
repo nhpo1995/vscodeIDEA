@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.0
+
+- Inspect exact CSS on every activation; recover missing patches after same-version reinstalls, and suppress repeated failed authorization attempts for unchanged targets.
+- Preserve user edits/deletions across automatic upgrades with released ownership; explicit Apply rebases undo to the current user choice. Batch palette writes and restoration.
+- Add on-disk/missing/outdated/error/pending-reload status and a native Reload Window action. Avoid claims that an on-disk marker proves a live renderer state.
+- Back off unavailable/failed Java providers from 2 to 60 seconds, retain cooldown while typing, and ignore unrelated document changes.
+- Keep Restore available with missing logo files and retain reload recovery state when settings restoration fails.
+
 ## 0.4.2
 
 - Replace the six-file-icon draft with 38 thin outline assets and mappings for 50 extensions, 30 filenames, folder states and common project folders.

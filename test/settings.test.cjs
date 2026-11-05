@@ -25,3 +25,41 @@ test('upgrade releases behavior settings while retaining appearance ownership',a
  assert.equal(f.map.get('workbench.colorTheme'),'IDEA-inspired Dark');
  assert.ok(f.journal['workbench.colorTheme']);assert.ok(!f.journal['editor.minimap.enabled']);
 });
+test('automatic upgrades retain edits and deletions across later upgrades; explicit Apply rebases undo',async()=>{
+ const f=fixture({theme:'old'});
+ await applySettings(f.host,{theme:'owned',icons:'owned'});
+ f.map.set('theme','user');f.map.delete('icons');
+ await applySettings(f.host,{theme:'v2',icons:'v2'},'upgrade');
+ await applySettings(f.host,{theme:'v3',icons:'v3'},'upgrade');
+ assert.equal(f.map.get('theme'),'user');assert.equal(f.map.has('icons'),false);
+ await applySettings(f.host,{theme:'explicit',icons:'explicit'});
+ await restoreSettings(f.host);
+ assert.equal(f.map.get('theme'),'user');assert.equal(f.map.has('icons'),false);
+});
+test('new preset keys do not overwrite existing custom values on upgrade',async()=>{
+ const f=fixture({custom:'mine'});await applySettings(f.host,{custom:'new',fresh:1},'upgrade');
+ assert.equal(f.map.get('custom'),'mine');assert.equal(f.map.get('fresh'),1);
+ await restoreSettings(f.host);assert.equal(f.map.get('custom'),'mine');assert.equal(f.map.has('fresh'),false);
+});
+test('palette uses one settings write and undo preserves later edits',async()=>{
+ const {applyPalette}=require('../dist/settings');const key='workbench.colorCustomizations';
+ const f=fixture({[key]:{'[IDEA-inspired Dark]':{a:'original'}}});let writes=0;const write=f.host.write;f.host.write=async(k,v)=>{writes++;await write(k,v)};
+ await applyPalette(f.host,{a:'v1',b:'v1',c:'v1'});assert.equal(writes,1);
+ const colors=structuredClone(f.map.get(key));colors['[IDEA-inspired Dark]'].b='mine';colors.unrelated='later';f.map.set(key,colors);
+ writes=0;await applyPalette(f.host,{a:'v2',b:'v2',c:'v2'},'upgrade');assert.equal(writes,1);
+ assert.equal(f.map.get(key)['[IDEA-inspired Dark]'].b,'mine');
+ writes=0;await restoreSettings(f.host);assert.equal(writes,1);
+ assert.deepEqual(f.map.get(key),{'[IDEA-inspired Dark]':{a:'original',b:'mine'},unrelated:'later'});
+});
+test('failed batch palette reapply retains old ownership for Restore',async()=>{
+ const {applyPalette}=require('../dist/settings');const f=fixture();await applyPalette(f.host,{a:'v1',b:'v1'});
+ const write=f.host.write;f.host.write=async()=>{throw Error('read only')};
+ await assert.rejects(applyPalette(f.host,{a:'v2',b:'v2'}));f.host.write=write;
+ await restoreSettings(f.host);assert.equal(f.map.has('workbench.colorCustomizations'),false);
+});
+test('palette write that succeeds before throwing can still be restored',async()=>{
+ const {applyPalette}=require('../dist/settings');const f=fixture();const write=f.host.write;
+ f.host.write=async(k,v)=>{await write(k,v);throw Error('connection lost after write')};
+ await assert.rejects(applyPalette(f.host,{a:'new',b:'new'}));f.host.write=write;
+ await restoreSettings(f.host);assert.equal(f.map.has('workbench.colorCustomizations'),false);
+});

@@ -1,75 +1,139 @@
-# IDEA-inspired Workspace
+<div align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="media/logo-header.svg">
+    <img src="media/logo-wordmark.svg" alt="NhpDev" width="220">
+  </picture>
+  <h1>IDEA-inspired Workspace</h1>
+  <p>An IntelliJ-inspired appearance for Visual Studio Code that keeps native VS Code workflows intact.</p>
+  <p><strong>Created by NhpDev</strong></p>
+  <p>
+    <a href="https://github.com/nhpo1995/vscodeIDEA-nhpdev/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/nhpo1995/vscodeIDEA-nhpdev?display_name=tag&sort=semver"></a>
+    <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/github/license/nhpo1995/vscodeIDEA-nhpdev"></a>
+    <img alt="Visual Studio Code 1.95 or later" src="https://img.shields.io/badge/VS%20Code-1.95%2B-007ACC?logo=visualstudiocode&logoColor=white">
+    <a href="https://github.com/nhpo1995/vscodeIDEA-nhpdev/releases"><img alt="GitHub release downloads" src="https://img.shields.io/github/downloads/nhpo1995/vscodeIDEA-nhpdev/total?label=downloads"></a>
+    <a href="https://github.com/nhpo1995/vscodeIDEA-nhpdev/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/nhpo1995/vscodeIDEA-nhpdev"></a>
+    <a href="https://github.com/nhpo1995/vscodeIDEA-nhpdev/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/nhpo1995/vscodeIDEA-nhpdev"></a>
+  </p>
+  <p>
+    <a href="https://github.com/nhpo1995/vscodeIDEA-nhpdev/releases">Download a release</a>
+    ·
+    <a href="CHANGELOG.md">Changelog</a>
+    ·
+    <a href="LICENSE">MIT License</a>
+  </p>
+</div>
 
-Giao diện theo ảnh IntelliJ do người dùng cung cấp, giữ navbar, thao tác và hành vi gốc của VS Code. Bản 0.4.2 chỉ thay đổi appearance: theme, file icons, product icons và CSS/logo NhpDev.
+![IDEA-inspired Workspace Explorer icons in VS Code](docs/screenshots/icons-0.4.2.png)
 
-## Cài đặt
+## Overview
 
-Cài `idea-workspace-0.4.2.vsix`. Khi extension kích hoạt:
+IDEA-inspired Workspace brings a coordinated dark theme, file icons, product icons, Java semantic highlighting, and optional title-bar customization to Visual Studio Code. The extension keeps the native menus, panels, editor layout, and keyboard workflows.
 
-1. Theme và hai bộ icons tự áp dụng, không cần chạy Apply hay script.
-2. Extension tự cài CSS và logo nếu có quyền ghi bản VS Code.
-3. Với bản Linux trong thư mục hệ thống, extension tự mở hộp thoại xác thực quản trị qua PolicyKit. Bạn nhập mật khẩu tại hộp thoại hệ điều hành, không gõ lệnh terminal. Dùng runtime có sẵn của VS Code, không cần cài Node riêng.
-4. Sau khi CSS/logo được cài, thoát hoàn toàn tất cả cửa sổ VS Code rồi mở lại để nạp workbench mới. Theme/icons có hiệu lực ngay.
+The current source version is **0.5.0**. GitHub Releases provide installable VSIX packages for versions **0.1.0 through 0.4.2**. Earlier tags point to the 0.4.2 source snapshot; each release includes the archived VSIX for its labeled version.
 
-Nếu hủy xác thực, theme và icons vẫn hoạt động. Extension không hỏi mật khẩu lặp lại ở mỗi lần mở. Dùng **IDEA Workspace: Apply UI and Logo** khi muốn thử lại; đây là lệnh khôi phục tùy chọn, không phải bước cài bắt buộc.
+## Features
 
-## Appearance, giữ nguyên workflow
+- **IDEA-inspired Dark theme** with a neutral editor background and coordinated syntax colors.
+- **File icon theme** with 38 SVG assets, mappings for common extensions and filenames, and distinct folder states.
+- **Product icon theme** with 24 original glyphs for project and symbol views.
+- **Java semantic highlighting** for types, methods, and readonly `UPPER_CASE` constants when a Java language server provides semantic tokens.
+- **Optional title-bar logo and workbench styling** with Apply and Restore commands.
+- **Logo selection** from a local SVG or PNG file.
+- **Upgrade-safe settings** that preserve your later edits across automatic upgrades.
+- **CSS recovery and reload status** with a native Reload Window action when the workbench needs to load updated styling.
+- **Diagnostics and setup commands** to review the extension state.
 
-- Nền editor xám đen `#242424` đúng ảnh tham chiếu; header gradient teal nhẹ chuyển về xám đen.
-- Product icon font WOFF gồm 24 glyph tự vẽ; các icon còn lại dùng fallback VS Code.
-- Header dùng cỡ chữ 14px, footer 13px. Chiều cao và vùng tương tác vẫn do layout engine của VS Code quản lý, tránh tràn/che nội dung.
-- Logo NhpDev cho nền tối: biểu tượng kèm chữ NhpDev, nét xám sáng + cam, nền trong suốt; giữ đường nét gốc và màu cam, ngay trước File khi custom titlebar có phần tử app icon.
-- Không thêm nút Run/Debug/Terminal vào navbar, không cung cấp keymap thay thế.
-- Không đổi minimap, breadcrumbs, thứ tự/vị trí panel, chế độ tab, command center hay setting Experimental Modern UI.
-- Khi nâng cấp từ 0.2, các setting workflow mà extension từng đổi được hoàn lại theo journal nếu người dùng chưa sửa tiếp. Theme và palette vẫn được giữ.
+## Installation
 
-Không thay icon taskbar hoặc logo Activity Bar. Navbar/menu vẫn là thành phần gốc của VS Code. Native titlebar không có phần tử app icon tương ứng; extension giữ nguyên lựa chọn titlebar của người dùng.
+### Install from GitHub Releases
 
-## Logo và hoàn tác
+1. Open [Releases](https://github.com/nhpo1995/vscodeIDEA-nhpdev/releases) and choose a version.
+2. Download that release's `idea-workspace-<version>.vsix` asset.
+3. In VS Code, open the Command Palette and run **Extensions: Install from VSIX...**.
+4. Select the downloaded VSIX file.
 
-**IDEA Workspace: Choose Logo (SVG or PNG)** tự áp dụng logo sau khi chọn. Logo phải là file local SVG tĩnh tự chứa hoặc PNG hợp lệ, tối đa 1MB. Để trống `ideaWorkspace.logoPath` dùng bản biểu tượng + chữ NhpDev dành cho nền tối. File logo navy/cam gốc vẫn được giữ trong `media/logo.svg`.
-
-**IDEA Workspace: Restore UI and Settings** tự gỡ CSS và khôi phục appearance; có thể mở xác thực hệ điều hành nếu cần. Sau Restore, tự áp dụng được dừng cho tới khi người dùng chủ động Apply lại. Gỡ extension sau khi Restore.
-
-Restore chỉ xóa khối CSS có marker, giữ chỉnh sửa khác trong workbench. Settings/màu được phục hồi theo từng mục, giữ thay đổi người dùng thêm sau đó. Backup gắn version/hash nằm trong storage của extension. Helper quản trị ghim hash cho Apply và giữ ownership/mode; không chmod thư mục cài đặt, không ghi đè toàn bộ HTML bằng backup cũ, không vô hiệu CSP hay kiểm tra toàn vẹn.
-
-## Giới hạn
-
-VS Code không có API theme cho logo hệ thống hoặc CSS workbench. Phần deep UI sửa file cài đặt, dùng chung các profile và có thể hiện cảnh báo toàn vẹn. Sau cập nhật VS Code, extension tự thử áp dụng lại một lần. Sau hủy xác thực, có thể dùng lệnh Apply để thử lại. Xác thực quản trị tự động hiện triển khai trên Linux có `pkexec`; Windows/macOS vẫn tự áp dụng theme/icons, chưa có luồng nâng quyền tương đương được kiểm thử.
-
-## Build
+You can also install from a terminal:
 
 ```sh
+code --install-extension ./idea-workspace-0.5.0.vsix
+```
+
+Replace the filename with the version you downloaded. After installation, the theme and icon themes apply automatically when the extension activates.
+
+## Optional workbench customization
+
+VS Code does not expose an API for changing the application title-bar logo or injecting custom workbench CSS. The extension can patch the installed VS Code workbench to provide those optional appearance changes.
+
+- On Linux installations that require administrator access, the extension requests authentication through the operating system's PolicyKit dialog (`pkexec`). It does not ask you to enter a password in the terminal or change installation permissions.
+- Automatic elevation for this patch is implemented for Linux. On Windows and macOS, the theme and icon themes work, but equivalent automatic elevation for the workbench patch is not currently provided.
+- After applying the workbench patch, choose **Reload Window** when prompted to load the updated CSS. You can also use **IDEA Workspace: Reload Window to Load UI** from the Command Palette.
+- Cancelling authentication leaves the theme and icon themes available. Use **IDEA Workspace: Apply UI and Logo** to try the optional patch again.
+
+### Restore changes
+
+Run **IDEA Workspace: Restore UI and Settings** to remove the extension's marked CSS patch and restore the appearance settings it changed. Restore preserves unrelated CSS and settings edits, then prompts you to reload the window when needed. After Restore, automatic reapplication stays paused until you choose Apply again. Restore before uninstalling if you want to remove the workbench customization.
+
+## Commands
+
+Open the Command Palette and search for **IDEA Workspace**:
+
+| Command | Purpose |
+| --- | --- |
+| `IDEA Workspace: Apply UI and Logo` | Reapply the extension presets for the theme, icons, UI colors, and logo. Use this to return to the extension's appearance settings. |
+| `IDEA Workspace: Open Setup` | Open the setup menu. |
+| `IDEA Workspace: Choose Logo (SVG or PNG)` | Choose a new logo; the extension applies it automatically. |
+| `IDEA Workspace: Reload Window to Load UI` | Reload VS Code after the workbench CSS changes. |
+| `IDEA Workspace: Diagnose UI and Logo` | Inspect the current state and troubleshoot setup. |
+| `IDEA Workspace: Restore UI and Settings` | Undo extension-managed changes while preserving your later edits. |
+
+The `ideaWorkspace.logoPath` setting accepts an absolute path to a local SVG or PNG. Leave it empty to use the bundled NhpDev logo. The logo picker applies the selection automatically.
+
+## Java highlighting
+
+Java-specific semantic colors depend on an active Java language server and semantic highlighting. The extension reads semantic tokens from the existing provider and adds decorations for readonly uppercase constants; it does not replace the Java language server or infer constants from names alone. If semantic tokens are not available yet, the theme's regular colors are used until the provider updates.
+
+The file icon theme classifies files by extension and filename. It does not inspect Java source to give Explorer icons based on whether a file contains a class, interface, or enum. Semantic symbol icons may appear in Outline when the language provider supplies the symbol kind.
+
+## Compatibility and limitations
+
+- Requires Visual Studio Code **1.95.0 or later**.
+- Theme and icon themes use VS Code extension APIs. The optional workbench CSS and logo patch modifies files in the VS Code installation, is shared across profiles, and may trigger VS Code's installation-integrity warning.
+- A VS Code update may replace the patched files. The extension attempts to reapply the patch once after an update; you can also use Apply to retry.
+- Native title-bar behavior varies by operating system and title-bar mode. The extension does not change the taskbar icon or Activity Bar logo.
+- The supplied icons are original assets inspired by the reference style; they are not a complete copy of IntelliJ icons.
+- No telemetry is sent by this project.
+
+## Build and test
+
+Requirements: Node.js and npm. The runtime extension has no external runtime dependencies.
+
+```sh
+git clone https://github.com/nhpo1995/vscodeIDEA-nhpdev.git
+cd vscodeIDEA-nhpdev
 npm ci
 npm test
 npm run package
 ```
 
-Runtime extension không có dependency bên ngoài. Tạo lại font (tùy chọn): Python + fonttools 4.60.1, chạy `scripts/build-product-icons.py`. Source và tài nguyên do project cung cấp; không tải tài nguyên mạng hoặc gửi telemetry.
+`npm test` compiles the TypeScript and runs the Node.js test files. `npm run package` compiles the extension and creates a VSIX package using `vsce`.
 
-## Màu code trong 0.4.0
+Optional asset builders:
 
-| Thành phần | Màu |
-| --- | --- |
-| Datatype / primitive | Cyan `#76C7E7` |
-| Class / record | Vàng nhạt `#E2C077` |
-| Interface | Xanh ngọc `#7DCFC1` |
-| Method / function | Xanh dương `#61AFEF` |
-| Tên biến, field, parameter | Xám sáng `#D4D4D4` |
-| Java constant `final` + `UPPER_CASE` | Tím `#C792EA` |
+- Rebuild file icon SVG assets with `python3 scripts/build-file-icons.py` (no third-party Python packages required).
+- Rebuild the product icon font with `python3 scripts/build-product-icons.py` (requires Python and `fonttools` 4.60.1).
 
-Nhận diện constant Java dùng semantic token `readonly` của language server, rồi lọc tên `UPPER_CASE`. Áp dụng cả khai báo và các chỗ sử dụng. Biến mutable viết hoa và biến `final` camelCase vẫn xám sáng; enum viết hoa được coi là constant vì Java có final ngầm định. Không dùng regex đoán mọi tên viết hoa là constant.
+## Contributing
 
-Extension chỉ đọc token của provider hiện có và thêm text decorations; không đăng ký provider Java thay thế, không sửa JDK/Maven/PATH hoặc setting Java. Cần Java Language Server hoạt động và semantic highlighting bật để phân loại chính xác. Khi server chưa sẵn sàng, dùng màu theme cơ bản; việc cập nhật semantic có thể mất một nhịp sau khi server khởi tạo.
+Bug reports, corrections, and focused pull requests are welcome. For larger changes, open an issue first to discuss the expected behavior. Include your VS Code version and reproduction steps when reporting a problem. Please keep changes scoped and avoid adding unrelated workbench modifications.
 
-Logo header 0.4.1: [xem ảnh thực tế](docs/screenshots/logo-dark-0.4.1.png).
+## Releases
 
-## Icon theme 0.4.2
+See the [changelog](CHANGELOG.md) for project history and [GitHub Releases](https://github.com/nhpo1995/vscodeIDEA-nhpdev/releases) for tags and downloadable VSIX files.
 
-38 SVG file/folder assets nét mảnh, 50 liên kết đuôi file và 30 tên file đặc biệt. Java dạng C trong vòng tròn xanh; folder mở/đóng riêng, source/resources/build folder có dấu hiệu màu. JS/TS/Kotlin tách riêng; có Maven, Gradle, XML, JSON, properties, YAML, Docker, SQL, Markdown và các loại file phổ biến.
+## License
 
-24 product glyphs gồm Project dạng folder và các biểu tượng class/interface/enum/method/field trong Outline/breadcrumbs. Các icon riêng do extension khác cung cấp vẫn có thể dùng kiểu riêng hoặc fallback. Đây là bộ tự vẽ theo style tham chiếu, chưa phải bản sao toàn bộ icons IntelliJ.
+This project is licensed under the [MIT License](LICENSE).
 
-File icon theme của VS Code phân loại theo tên/đuôi file và language ID; không đọc nội dung Java để thay class/interface/enum icon. Vì vậy file `.java` trong Explorer dùng C chung, còn biểu tượng semantic theo loại được áp dụng ở Outline khi language provider cung cấp symbol kind. [API icon theme](https://code.visualstudio.com/api/extension-guides/file-icon-theme).
+## Upgrades and Restore
 
-[Ảnh Explorer thực tế 0.4.2](docs/screenshots/icons-0.4.2.png). Có thể dựng lại các SVG bằng `python3 scripts/build-file-icons.py` (không cần thư viện ngoài). Phần icons dùng API chính thức; bản này không thay đổi CSS chrome so với 0.4.1.
+Automatic upgrades preserve settings you have changed or deleted, and later upgrades leave those choices alone. **Apply UI and Logo** intentionally reapplies the extension presets. **Restore UI and Settings** reverses extension-managed changes while preserving later edits. The extension also checks its custom CSS on activation and recovers it if an update or reinstall removes it. The status bar reports when the CSS needs a window reload; “CSS installed” confirms the file on disk, not that the renderer has loaded it.

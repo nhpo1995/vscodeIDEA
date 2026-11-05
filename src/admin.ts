@@ -22,7 +22,7 @@ export async function prepareAdminScripts(target:string,storage:string,css:strin
  ${action==='apply'?`const current=await fs.readFile(target);
  if(crypto.createHash('sha256').update(current).digest('hex')!==${JSON.stringify(expected)})throw Error('Workbench changed since preparation. Run Apply in VS Code to prepare fresh scripts.');
  await exports.applyPatch(target,${JSON.stringify(backup)},${JSON.stringify(css)},${JSON.stringify(version)});`:'await exports.restorePatch(target);'}
- console.log(${JSON.stringify(action==='apply'?'Owned CSS applied. Fully restart VS Code to load the changes.':'Owned CSS removed. Fully restart VS Code to load the changes.')});
+ console.log(${JSON.stringify(action==='apply'?'Owned CSS applied. Reload the VS Code window to load the changes.':'Owned CSS removed. Reload the VS Code window to load the changes.')});
 })().catch(error=>{console.error(error.message);process.exitCode=1;});
 `;
   await fs.writeFile(result[action],script,{mode:0o600,flag:'wx'});

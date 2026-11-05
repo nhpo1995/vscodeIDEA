@@ -2,7 +2,7 @@
   "name": "idea-workspace",
   "displayName": "IDEA-inspired Workspace",
   "description": "IDEA-inspired appearance with automatic theme, icons and reversible custom chrome. Native VS Code workflows stay unchanged.",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "publisher": "local-workspace",
   "license": "MIT",
   "engines": {
@@ -66,6 +66,10 @@
       {
         "command": "ideaWorkspace.diagnose",
         "title": "IDEA Workspace: Diagnose UI and Logo"
+      },
+      {
+        "command": "ideaWorkspace.reload",
+        "title": "IDEA Workspace: Reload Window to Load UI"
       }
     ],
     "configuration": {
