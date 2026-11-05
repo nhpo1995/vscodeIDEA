@@ -1,0 +1,267 @@
+{
+  "iconDefinitions": {
+    "folder": {
+      "iconPath": "../media/files/folder.svg"
+    },
+    "folder-open": {
+      "iconPath": "../media/files/folder-open.svg"
+    },
+    "source-folder": {
+      "iconPath": "../media/files/source-folder.svg"
+    },
+    "source-folder-open": {
+      "iconPath": "../media/files/source-folder-open.svg"
+    },
+    "resource-folder": {
+      "iconPath": "../media/files/resource-folder.svg"
+    },
+    "resource-folder-open": {
+      "iconPath": "../media/files/resource-folder-open.svg"
+    },
+    "build-folder": {
+      "iconPath": "../media/files/build-folder.svg"
+    },
+    "build-folder-open": {
+      "iconPath": "../media/files/build-folder-open.svg"
+    },
+    "config-folder": {
+      "iconPath": "../media/files/config-folder.svg"
+    },
+    "config-folder-open": {
+      "iconPath": "../media/files/config-folder-open.svg"
+    },
+    "root-folder": {
+      "iconPath": "../media/files/root-folder.svg"
+    },
+    "file": {
+      "iconPath": "../media/files/file.svg"
+    },
+    "java": {
+      "iconPath": "../media/files/java.svg"
+    },
+    "java-interface": {
+      "iconPath": "../media/files/java-interface.svg"
+    },
+    "java-enum": {
+      "iconPath": "../media/files/java-enum.svg"
+    },
+    "package": {
+      "iconPath": "../media/files/package.svg"
+    },
+    "kotlin": {
+      "iconPath": "../media/files/kotlin.svg"
+    },
+    "typescript": {
+      "iconPath": "../media/files/typescript.svg"
+    },
+    "javascript": {
+      "iconPath": "../media/files/javascript.svg"
+    },
+    "react": {
+      "iconPath": "../media/files/react.svg"
+    },
+    "json": {
+      "iconPath": "../media/files/json.svg"
+    },
+    "xml": {
+      "iconPath": "../media/files/xml.svg"
+    },
+    "html": {
+      "iconPath": "../media/files/html.svg"
+    },
+    "css": {
+      "iconPath": "../media/files/css.svg"
+    },
+    "markdown": {
+      "iconPath": "../media/files/markdown.svg"
+    },
+    "database": {
+      "iconPath": "../media/files/database.svg"
+    },
+    "yaml": {
+      "iconPath": "../media/files/yaml.svg"
+    },
+    "properties": {
+      "iconPath": "../media/files/properties.svg"
+    },
+    "shell": {
+      "iconPath": "../media/files/shell.svg"
+    },
+    "git": {
+      "iconPath": "../media/files/git.svg"
+    },
+    "docker": {
+      "iconPath": "../media/files/docker.svg"
+    },
+    "maven": {
+      "iconPath": "../media/files/maven.svg"
+    },
+    "gradle": {
+      "iconPath": "../media/files/gradle.svg"
+    },
+    "image": {
+      "iconPath": "../media/files/image.svg"
+    },
+    "archive": {
+      "iconPath": "../media/files/archive.svg"
+    },
+    "pdf": {
+      "iconPath": "../media/files/pdf.svg"
+    },
+    "config": {
+      "iconPath": "../media/files/config.svg"
+    },
+    "env": {
+      "iconPath": "../media/files/env.svg"
+    }
+  },
+  "file": "file",
+  "folder": "folder",
+  "folderExpanded": "folder-open",
+  "rootFolder": "root-folder",
+  "rootFolderExpanded": "folder-open",
+  "folderNames": {
+    "src": "source-folder",
+    "main": "source-folder",
+    "java": "source-folder",
+    "kotlin": "source-folder",
+    "test": "source-folder",
+    "tests": "source-folder",
+    "resources": "resource-folder",
+    "public": "resource-folder",
+    "assets": "resource-folder",
+    "target": "build-folder",
+    "build": "build-folder",
+    "dist": "build-folder",
+    ".git": "config-folder",
+    ".vscode": "config-folder",
+    ".idea": "config-folder",
+    ".mvn": "config-folder",
+    ".gradle": "config-folder"
+  },
+  "folderNamesExpanded": {
+    "src": "source-folder-open",
+    "main": "source-folder-open",
+    "java": "source-folder-open",
+    "kotlin": "source-folder-open",
+    "test": "source-folder-open",
+    "tests": "source-folder-open",
+    "resources": "resource-folder-open",
+    "public": "resource-folder-open",
+    "assets": "resource-folder-open",
+    "target": "build-folder-open",
+    "build": "build-folder-open",
+    "dist": "build-folder-open",
+    ".git": "config-folder-open",
+    ".vscode": "config-folder-open",
+    ".idea": "config-folder-open",
+    ".mvn": "config-folder-open",
+    ".gradle": "config-folder-open"
+  },
+  "fileExtensions": {
+    "java": "java",
+    "class": "java",
+    "kt": "kotlin",
+    "kts": "kotlin",
+    "jar": "package",
+    "ts": "typescript",
+    "js": "javascript",
+    "mjs": "javascript",
+    "cjs": "javascript",
+    "tsx": "react",
+    "jsx": "react",
+    "json": "json",
+    "jsonc": "json",
+    "xml": "xml",
+    "html": "html",
+    "htm": "html",
+    "css": "css",
+    "scss": "css",
+    "less": "css",
+    "md": "markdown",
+    "mdx": "markdown",
+    "sql": "database",
+    "db": "database",
+    "sqlite": "database",
+    "yaml": "yaml",
+    "yml": "yaml",
+    "properties": "properties",
+    "conf": "config",
+    "ini": "config",
+    "toml": "config",
+    "sh": "shell",
+    "bash": "shell",
+    "zsh": "shell",
+    "fish": "shell",
+    "bat": "shell",
+    "ps1": "shell",
+    "png": "image",
+    "jpg": "image",
+    "jpeg": "image",
+    "gif": "image",
+    "webp": "image",
+    "svg": "image",
+    "ico": "image",
+    "zip": "archive",
+    "gz": "archive",
+    "tar": "archive",
+    "7z": "archive",
+    "pdf": "pdf",
+    "gradle": "gradle",
+    "env": "env"
+  },
+  "fileNames": {
+    "pom.xml": "maven",
+    "build.gradle": "gradle",
+    "settings.gradle": "gradle",
+    "build.gradle.kts": "gradle",
+    "settings.gradle.kts": "gradle",
+    "gradlew": "gradle",
+    "gradlew.bat": "gradle",
+    "mvnw": "maven",
+    "mvnw.cmd": "maven",
+    "package.json": "javascript",
+    "package-lock.json": "javascript",
+    "tsconfig.json": "typescript",
+    "jsconfig.json": "javascript",
+    "Dockerfile": "docker",
+    "docker-compose.yml": "docker",
+    "docker-compose.yaml": "docker",
+    "compose.yml": "docker",
+    "compose.yaml": "docker",
+    ".dockerignore": "docker",
+    ".gitignore": "git",
+    ".gitattributes": "git",
+    ".gitmodules": "git",
+    ".gitkeep": "git",
+    ".env": "env",
+    ".env.local": "env",
+    ".env.example": "env",
+    "package-info.java": "package",
+    "module-info.java": "package",
+    "README.md": "markdown",
+    "LICENSE": "file"
+  },
+  "languageIds": {
+    "java": "java",
+    "kotlin": "kotlin",
+    "typescript": "typescript",
+    "javascript": "javascript",
+    "typescriptreact": "react",
+    "javascriptreact": "react",
+    "json": "json",
+    "jsonc": "json",
+    "xml": "xml",
+    "html": "html",
+    "css": "css",
+    "scss": "css",
+    "less": "css",
+    "markdown": "markdown",
+    "sql": "database",
+    "yaml": "yaml",
+    "properties": "properties",
+    "shellscript": "shell",
+    "dockerfile": "docker",
+    "gitignore": "git"
+  }
+}

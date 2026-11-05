@@ -1,0 +1,114 @@
+[
+  {
+    "name": "config",
+    "icon": "url(\"vscode-file://vscode-app/home/nhpdev/workspace/tools/custom/idea-workspace/media/files/folder-open.svg\")"
+  },
+  {
+    "name": "app.toml",
+    "icon": "url(\"vscode-file://vscode-app/home/nhpdev/workspace/tools/custom/idea-workspace/media/files/config.svg\")"
+  },
+  {
+    "name": "scripts",
+    "icon": "url(\"vscode-file://vscode-app/home/nhpdev/workspace/tools/custom/idea-workspace/media/files/folder-open.svg\")"
+  },
+  {
+    "name": "run.sh",
+    "icon": "url(\"vscode-file://vscode-app/home/nhpdev/workspace/tools/custom/idea-workspace/media/files/shell.svg\")"
+  },
+  {
+    "name": "src/",
+    "icon": "url(\"vscode-file://vscode-app/home/nhpdev/workspace/tools/custom/idea-workspace/media/files/source-folder-open.svg\")"
+  },
+  {
+    "name": "java/",
+    "icon": "url(\"vscode-file://vscode-app/home/nhpdev/workspace/tools/custom/idea-workspace/media/files/folder-open.svg\")"
+  },
+  {
+    "name": "Mode.java",
+    "icon": "url(\"vscode-file://vscode-app/home/nhpdev/workspace/tools/custom/idea-workspace/media/files/java.svg\")"
+  },
+  {
+    "name": "RetryPolicy.java",
+    "icon": "url(\"vscode-file://vscode-app/home/nhpdev/workspace/tools/custom/idea-workspace/media/files/java.svg\")"
+  },
+  {
+    "name": "RetryService.java",
+    "icon": "url(\"vscode-file://vscode-app/home/nhpdev/workspace/tools/custom/idea-workspace/media/files/java.svg\")"
+  },
+  {
+    "name": "resources",
+    "icon": "url(\"vscode-file://vscode-app/home/nhpdev/workspace/tools/custom/idea-workspace/media/files/resource-folder.svg\")"
+  },
+  {
+    "name": "target",
+    "icon": "url(\"vscode-file://vscode-app/home/nhpdev/workspace/tools/custom/idea-workspace/media/files/build-folder.svg\")"
+  },
+  {
+    "name": ".env",
+    "icon": "url(\"vscode-file://vscode-app/home/nhpdev/workspace/tools/custom/idea-workspace/media/files/env.svg\")"
+  },
+  {
+    "name": ".gitignore",
+    "icon": "url(\"vscode-file://vscode-app/home/nhpdev/workspace/tools/custom/idea-workspace/media/files/git.svg\")"
+  },
+  {
+    "name": "app.js",
+    "icon": "url(\"vscode-file://vscode-app/home/nhpdev/workspace/tools/custom/idea-workspace/media/files/javascript.svg\")"
+  },
+  {
+    "name": "app.ts",
+    "icon": "url(\"vscode-file://vscode-app/home/nhpdev/workspace/tools/custom/idea-workspace/media/files/typescript.svg\")"
+  },
+  {
+    "name": "build.gradle",
+    "icon": "url(\"vscode-file://vscode-app/home/nhpdev/workspace/tools/custom/idea-workspace/media/files/gradle.svg\")"
+  },
+  {
+    "name": "build.gradle.kts",
+    "icon": "url(\"vscode-file://vscode-app/home/nhpdev/workspace/tools/custom/idea-workspace/media/files/gradle.svg\")"
+  },
+  {
+    "name": "Component.tsx",
+    "icon": "url(\"vscode-file://vscode-app/home/nhpdev/workspace/tools/custom/idea-workspace/media/files/react.svg\")"
+  },
+  {
+    "name": "docker-compose.yml",
+    "icon": "url(\"vscode-file://vscode-app/home/nhpdev/workspace/tools/custom/idea-workspace/media/files/docker.svg\")"
+  },
+  {
+    "name": "Dockerfile",
+    "icon": "url(\"vscode-file://vscode-app/home/nhpdev/workspace/tools/custom/idea-workspace/media/files/docker.svg\")"
+  },
+  {
+    "name": "index.html",
+    "icon": "url(\"vscode-file://vscode-app/home/nhpdev/workspace/tools/custom/idea-workspace/media/files/html.svg\")"
+  },
+  {
+    "name": "package.json",
+    "icon": "url(\"vscode-file://vscode-app/home/nhpdev/workspace/tools/custom/idea-workspace/media/files/javascript.svg\")"
+  },
+  {
+    "name": "pom.xml",
+    "icon": "url(\"vscode-file://vscode-app/home/nhpdev/workspace/tools/custom/idea-workspace/media/files/maven.svg\")"
+  },
+  {
+    "name": "queries.sql",
+    "icon": "url(\"vscode-file://vscode-app/home/nhpdev/workspace/tools/custom/idea-workspace/media/files/database.svg\")"
+  },
+  {
+    "name": "README.md",
+    "icon": "url(\"vscode-file://vscode-app/home/nhpdev/workspace/tools/custom/idea-workspace/media/files/markdown.svg\")"
+  },
+  {
+    "name": "settings.json",
+    "icon": "url(\"vscode-file://vscode-app/home/nhpdev/workspace/tools/custom/idea-workspace/media/files/json.svg\")"
+  },
+  {
+    "name": "styles.css",
+    "icon": "url(\"vscode-file://vscode-app/home/nhpdev/workspace/tools/custom/idea-workspace/media/files/css.svg\")"
+  },
+  {
+    "name": "tsconfig.json",
+    "icon": "url(\"vscode-file://vscode-app/home/nhpdev/workspace/tools/custom/idea-workspace/media/files/typescript.svg\")"
+  }
+]

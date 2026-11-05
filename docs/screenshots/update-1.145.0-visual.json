@@ -1,0 +1,157 @@
+{
+  "logoBackground": "rgba(0, 0, 0, 0)",
+  "headerGradient": "linear-gradient(105deg, rgb(38, 59, 61) 0%, rgb(37, 45, 47) 32%, rgb(30, 31, 34) 72%)",
+  "syntax": [
+    {
+      "text": "RetryPolicy",
+      "color": "rgb(125, 207, 193)"
+    },
+    {
+      "text": "int",
+      "color": "rgb(118, 199, 231)"
+    },
+    {
+      "text": "nextAttempt",
+      "color": "rgb(97, 175, 239)"
+    },
+    {
+      "text": "int",
+      "color": "rgb(118, 199, 231)"
+    },
+    {
+      "text": "RetryService",
+      "color": "rgb(226, 192, 119)"
+    },
+    {
+      "text": "RetryPolicy",
+      "color": "rgb(125, 207, 193)"
+    },
+    {
+      "text": "int",
+      "color": "rgb(118, 199, 231)"
+    },
+    {
+      "text": "MAX_RETRIES",
+      "color": "rgb(199, 146, 234)"
+    },
+    {
+      "text": "int",
+      "color": "rgb(118, 199, 231)"
+    },
+    {
+      "text": "initialRetries",
+      "color": "rgb(212, 212, 212)"
+    },
+    {
+      "text": "int",
+      "color": "rgb(118, 199, 231)"
+    },
+    {
+      "text": "int",
+      "color": "rgb(118, 199, 231)"
+    },
+    {
+      "text": "UPPER_MUTABLE",
+      "color": "rgb(212, 212, 212)"
+    },
+    {
+      "text": "int",
+      "color": "rgb(118, 199, 231)"
+    },
+    {
+      "text": "nextAttempt",
+      "color": "rgb(97, 175, 239)"
+    },
+    {
+      "text": "int",
+      "color": "rgb(118, 199, 231)"
+    },
+    {
+      "text": "int",
+      "color": "rgb(118, 199, 231)"
+    },
+    {
+      "text": "LOCAL_LIMIT",
+      "color": "rgb(199, 146, 234)"
+    },
+    {
+      "text": "MAX_RETRIES",
+      "color": "rgb(199, 146, 234)"
+    },
+    {
+      "text": "int",
+      "color": "rgb(118, 199, 231)"
+    },
+    {
+      "text": "localCount",
+      "color": "rgb(212, 212, 212)"
+    },
+    {
+      "text": "int",
+      "color": "rgb(118, 199, 231)"
+    },
+    {
+      "text": "UPPER_LOCAL",
+      "color": "rgb(212, 212, 212)"
+    },
+    {
+      "text": "int",
+      "color": "rgb(118, 199, 231)"
+    },
+    {
+      "text": "MAX_RETRIES",
+      "color": "rgb(199, 146, 234)"
+    },
+    {
+      "text": "LOCAL_LIMIT",
+      "color": "rgb(199, 146, 234)"
+    },
+    {
+      "text": "initialRetries",
+      "color": "rgb(212, 212, 212)"
+    },
+    {
+      "text": "UPPER_MUTABLE",
+      "color": "rgb(212, 212, 212)"
+    },
+    {
+      "text": "localCount",
+      "color": "rgb(212, 212, 212)"
+    },
+    {
+      "text": "UPPER_LOCAL",
+      "color": "rgb(212, 212, 212)"
+    }
+  ],
+  "logo": {
+    "x": 6,
+    "y": 0.5,
+    "width": 32,
+    "height": 28,
+    "top": 0.5,
+    "right": 38,
+    "bottom": 28.5,
+    "left": 6
+  },
+  "menu": {
+    "x": 44,
+    "y": 0,
+    "width": 355.3515625,
+    "height": 29,
+    "top": 0,
+    "right": 399.3515625,
+    "bottom": 29,
+    "left": 44
+  },
+  "logoData": true,
+  "theme": "#242424",
+  "tabHeight": 31,
+  "iconFamily": "pi-nhpdev-workspace-ui",
+  "fontStatus": "loaded",
+  "toolbar": [
+    "Split Editor Right (Ctrl+\\)\n[Alt] Split Editor Down",
+    "More Actions..."
+  ],
+  "style": true,
+  "modernUI": true
+}

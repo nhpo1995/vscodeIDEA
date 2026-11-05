@@ -1,0 +1,8 @@
+NhpDev brand assets supplied by the user.
+Titlebar logo: NhpDev_logo_pack/01_goc/NHP_logo.svg (unchanged).
+Extension icon: NhpDev_logo_pack/02_avatar/NHP_avatar_512.png (unchanged).
+Colors: navy #1D3A5D, orange #BD4929.
+
+Dark titlebar display variant: logo-dark.svg preserves the original paths/viewBox and orange #BD4929; navy is replaced with light gray #DFE1E5, approved by the user. Original logo.svg and extension-icon.png remain unchanged.
+
+Header wordmark: logo-header.svg uses original path outlines from NHP_NhpDev.svg, recomposed for a readable 100x28 header slot. Navy maps to #DFE1E5, orange remains #BD4929. Untouched full wordmark retained as logo-wordmark.svg.

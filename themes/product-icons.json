@@ -1,0 +1,141 @@
+{
+  "fonts": [
+    {
+      "id": "nhpdev-workspace-ui",
+      "src": [
+        {
+          "path": "../media/workspace-ui.woff",
+          "format": "woff"
+        }
+      ],
+      "weight": "normal",
+      "style": "normal"
+    }
+  ],
+  "iconDefinitions": {
+    "files": {
+      "fontCharacter": "\\e000",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "search": {
+      "fontCharacter": "\\e001",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "source-control": {
+      "fontCharacter": "\\e002",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "debug-alt": {
+      "fontCharacter": "\\e003",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "extensions": {
+      "fontCharacter": "\\e004",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "terminal": {
+      "fontCharacter": "\\e005",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "settings-gear": {
+      "fontCharacter": "\\e006",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "account": {
+      "fontCharacter": "\\e007",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "debug-start": {
+      "fontCharacter": "\\e008",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "debug-pause": {
+      "fontCharacter": "\\e009",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "debug-stop": {
+      "fontCharacter": "\\e00a",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "close": {
+      "fontCharacter": "\\e00b",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "chevron-right": {
+      "fontCharacter": "\\e00c",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "chevron-down": {
+      "fontCharacter": "\\e00d",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "symbol-class": {
+      "fontCharacter": "\\e00e",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "symbol-interface": {
+      "fontCharacter": "\\e00f",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "symbol-enum": {
+      "fontCharacter": "\\e010",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "symbol-method": {
+      "fontCharacter": "\\e011",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "symbol-field": {
+      "fontCharacter": "\\e012",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "package": {
+      "fontCharacter": "\\e013",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "database": {
+      "fontCharacter": "\\e014",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "testing": {
+      "fontCharacter": "\\e015",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "bell": {
+      "fontCharacter": "\\e016",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "list-tree": {
+      "fontCharacter": "\\e017",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "search-large": {
+      "fontCharacter": "\\e001",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "symbol-constructor": {
+      "fontCharacter": "\\e00e",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "symbol-property": {
+      "fontCharacter": "\\e012",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "symbol-constant": {
+      "fontCharacter": "\\e00e",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "folder": {
+      "fontCharacter": "\\e000",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "folder-opened": {
+      "fontCharacter": "\\e000",
+      "fontId": "nhpdev-workspace-ui"
+    },
+    "beaker": {
+      "fontCharacter": "\\e015",
+      "fontId": "nhpdev-workspace-ui"
+    }
+  }
+}

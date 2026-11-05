@@ -1,0 +1,109 @@
+{
+  "name": "idea-workspace",
+  "displayName": "IDEA-inspired Workspace",
+  "description": "IDEA-inspired appearance with automatic theme, icons and reversible custom chrome. Native VS Code workflows stay unchanged.",
+  "version": "0.4.2",
+  "publisher": "local-workspace",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "categories": [
+    "Themes",
+    "Other"
+  ],
+  "main": "./dist/extension.js",
+  "extensionKind": [
+    "ui"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": true
+    },
+    "virtualWorkspaces": {
+      "supported": true
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p .",
+    "test": "npm run compile && node --test test/*.test.cjs",
+    "package": "npm run compile && vsce package --allow-missing-repository --no-rewrite-relative-links"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "@types/vscode": "^1.95.0",
+    "@vscode/vsce": "^4.1.0",
+    "typescript": "^7.0.2"
+  },
+  "contributes": {
+    "themes": [
+      {
+        "label": "IDEA-inspired Dark",
+        "uiTheme": "vs-dark",
+        "path": "./themes/idea-dark.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "ideaWorkspace.apply",
+        "title": "IDEA Workspace: Apply UI and Logo"
+      },
+      {
+        "command": "ideaWorkspace.restore",
+        "title": "IDEA Workspace: Restore UI and Settings"
+      },
+      {
+        "command": "ideaWorkspace.selectLogo",
+        "title": "IDEA Workspace: Choose Logo (SVG or PNG)"
+      },
+      {
+        "command": "ideaWorkspace.setup",
+        "title": "IDEA Workspace: Open Setup"
+      },
+      {
+        "command": "ideaWorkspace.diagnose",
+        "title": "IDEA Workspace: Diagnose UI and Logo"
+      }
+    ],
+    "configuration": {
+      "title": "IDEA Workspace",
+      "properties": {
+        "ideaWorkspace.logoPath": {
+          "type": "string",
+          "default": "",
+          "scope": "machine",
+          "description": "Absolute SVG/PNG logo path. Empty uses bundled NhpDev. The logo picker applies automatically."
+        }
+      }
+    },
+    "iconThemes": [
+      {
+        "id": "idea-workspace-files",
+        "label": "IDEA-inspired File Icons",
+        "path": "./themes/file-icons.json"
+      }
+    ],
+    "productIconThemes": [
+      {
+        "id": "idea-workspace-ui",
+        "label": "NhpDev IDEA-inspired UI Icons",
+        "path": "./themes/product-icons.json"
+      }
+    ],
+    "colors": [
+      {
+        "id": "ideaWorkspace.constantForeground",
+        "description": "Java readonly UPPER_CASE identifiers. Other variables remain neutral.",
+        "defaults": {
+          "dark": "#C792EA",
+          "light": "#8040A0",
+          "highContrast": "#E4B5FF"
+        }
+      }
+    ]
+  },
+  "icon": "media/extension-icon.png"
+}

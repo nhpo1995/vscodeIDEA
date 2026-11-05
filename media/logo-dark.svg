@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1380 1140">
+<title>NhpDev — dark UI display variant</title>
+<desc>Tracé expérimental inspiré du modèle fourni. Largeur des montants de H : 130 unités. Espace intérieur : 210,344 unités. Rapport : 1,61803077.</desc>
+
+<g fill="#dfe1e5">
+<path d="M441 135 L571 55 L571 309 L781.344 309 L781.344 55 L911.344 135 L911.344 540 L781.344 620 L781.344 439 L571 439 L571 610 L441 472 Z"/>
+<path d="M441 780 L571 919 L571 1082 L441 1082 Z"/>
+</g>
+<g fill="#bd4929">
+<path d="M96 355 L212 281 L610 704 L610 588 L750 502 L750 1082 L610 1082 L610 900 L229 489 L229 857 L96 769 Z"/>
+<path d="M911.344 409 L1099 290 L1268 397 L1268 646 L914 858 L914 1082 L784 1082 L784 787 L1143 572 L1143 467 L1095 436 L911.344 546 Z"/>
+</g></svg>
