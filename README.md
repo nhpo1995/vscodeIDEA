@@ -29,7 +29,7 @@
 
 IDEA-inspired Workspace brings a coordinated dark theme, file icons, product icons, Java semantic highlighting, and optional title-bar customization to Visual Studio Code. The extension keeps the native menus, panels, editor layout, and keyboard workflows.
 
-The current source version is **0.5.0**. GitHub Releases provide installable VSIX packages for versions **0.1.0 through 0.4.2**. Earlier tags point to the 0.4.2 source snapshot; each release includes the archived VSIX for its labeled version.
+The latest release is **0.5.0**. GitHub Releases include installable VSIX packages for versions **0.1.0 through 0.5.0**. Tags **v0.1.0 through v0.4.2** point to the 0.4.2 source snapshot; each release includes the archived VSIX for its labeled version. The current branch contains the 0.5.0 source.
 
 ## Features
 
