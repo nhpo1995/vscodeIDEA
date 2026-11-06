@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
-      contents: read
+      contents: write
       id-token: write
     env:
       RELEASE_TAG: ${{ github.event.release.tag_name }}
@@ -50,20 +50,26 @@ jobs:
           }
           manifest.publisher = publisher;
           fs.writeFileSync('package.json', JSON.stringify(manifest, null, 2) + '\n');
+          fs.appendFileSync(process.env.GITHUB_ENV, `VSIX_PATH=${manifest.name}-${manifest.version}.vsix\n`);
           NODE
 
       - run: npm ci
       - run: npm test
 
       - name: Package the release
-        run: npm run package -- --githubBranch "$RELEASE_TAG" --out marketplace.vsix
+        run: npm run package -- --githubBranch "$RELEASE_TAG" --out "$VSIX_PATH"
 
       - name: Save the VSIX
         uses: actions/upload-artifact@v4
         with:
           name: marketplace-vsix-${{ github.event.release.tag_name }}
-          path: marketplace.vsix
+          path: ${{ env.VSIX_PATH }}
           if-no-files-found: error
 
+      - name: Attach the VSIX to GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$RELEASE_TAG" "$VSIX_PATH" --repo "$GITHUB_REPOSITORY" --clobber
+
       - name: Publish using Marketplace Trusted Publishing
-        run: npx --no-install vsce publish --oidc --packagePath marketplace.vsix --skip-duplicate
+        run: npx --no-install vsce publish --oidc --packagePath "$VSIX_PATH" --skip-duplicate

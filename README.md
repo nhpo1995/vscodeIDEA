@@ -127,31 +127,6 @@ Bug reports, corrections, and focused pull requests are welcome. For larger chan
 
 See the [changelog](CHANGELOG.md) for project history and [GitHub Releases](https://github.com/nhpo1995/vscodeIDEA/releases) for tags and downloadable VSIX files.
 
-### Automatic Marketplace publishing
-
-The pipelines have separate responsibilities:
-
-- **CI** ([ci.yml](.github/workflows/ci.yml)): on pushes to `main` and pull requests, run tests, verify VSIX packaging, and save the validation package as a workflow artifact. It does not need a Marketplace publisher or publishing credentials.
-- **CD** ([cd.yml](.github/workflows/cd.yml)): on a published stable GitHub Release, validate the tag/version, rerun tests against the exact tagged commit, build the release VSIX, save it as a workflow artifact, and publish that exact VSIX to the VS Code Marketplace. Only CD requests an OIDC publishing token. Pushing commits or tags alone, draft releases and prereleases do not publish to the Marketplace.
-
-One-time setup:
-
-1. Create or select your publisher at [Marketplace Management](https://marketplace.visualstudio.com/manage). Use its **ID**, not its display name.
-2. In GitHub repository **Settings → Secrets and variables → Actions → Variables**, create `MARKETPLACE_PUBLISHER_ID` with that ID. This is a repository variable, not a secret. CD sets the packaged publisher from this variable; CI and local builds keep the publisher declared in the manifest. Keep the variable unchanged for future updates to the same extension.
-3. Under the Marketplace publisher, open **Trusted Publishing** and create a policy with repository owner `nhpo1995`, repository `vscodeIDEA`, workflow `cd.yml`, and no environment. No PAT or Azure secret is needed. For a private repository, run the workflow within 48 hours of creating the policy. If a policy already names `publish-marketplace.yml`, replace it with one for `cd.yml`.
-4. Push the publishing workflow and packaging changes before creating the release. The released tag must include these changes; old tags will not acquire the new workflow.
-
-For each release, including the first Marketplace release:
-
-1. Update the version and lockfile with `npm version 0.5.1 --no-git-tag-version` (replace `0.5.1` with the desired unused version), and update the changelog.
-2. Commit and push the changes to GitHub.
-3. Create and publish a GitHub Release using a matching tag such as `v0.5.1`, targeting that commit.
-4. Check **Actions → CD - Publish to VS Code Marketplace**. The packaged VSIX is available in the run artifacts, even if Marketplace publishing fails. Fix publisher/policy settings and rerun failed jobs if needed; an already published version is skipped on retry. Publishing a changed package requires a new version.
-
-Once published, the extension ID is `<MARKETPLACE_PUBLISHER_ID>.idea-workspace`. A local installation under `local-workspace.idea-workspace` has a different ID and will not automatically migrate to the Marketplace publisher.
-
-See Microsoft's [publishing guide](https://code.visualstudio.com/api/working-with-extensions/publishing-extension#publish-with-github-actions-and-trusted-publishing) for Trusted Publishing details.
-
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
