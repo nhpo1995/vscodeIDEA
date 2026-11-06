@@ -2,7 +2,7 @@
   "name": "idea-workspace",
   "displayName": "IDEA-inspired Workspace",
   "description": "IDEA-inspired appearance with automatic theme, icons and reversible custom chrome. Native VS Code workflows stay unchanged.",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "publisher": "local-workspace",
   "repository": {
     "type": "git",
