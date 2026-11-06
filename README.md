@@ -26,11 +26,13 @@
 
 IDEA-inspired Workspace brings a coordinated dark theme, file icons, product icons, Java semantic highlighting, and optional title-bar customization to Visual Studio Code. The extension keeps the native menus, panels, editor layout, and keyboard workflows.
 
-The latest release is **0.5.0**. GitHub Releases include installable VSIX packages for versions **0.1.0 through 0.5.0**. Tags **v0.1.0 through v0.4.2** point to the 0.4.2 source snapshot; each release includes the archived VSIX for its labeled version. The current branch contains the 0.5.0 source.
+This source tree contains version **0.6.0**. See [GitHub Releases](https://github.com/nhpo1995/vscodeIDEA/releases) for available releases and downloadable VSIX packages.
 
 ## Features
 
 - **IDEA-inspired Dark theme** with a neutral editor background and coordinated syntax colors.
+- **Coordinated terminal colors** with a complete 16-color ANSI palette, cursor and selections. Application log colors require ANSI output from the application; the theme controls the palette, not log-level detection.
+- **Automatic editor and terminal typography** uses JetBrains Mono at 14px, with 1.2 terminal line spacing. The original font is bundled and installed for the current desktop user when missing; an existing Nerd Font variant is preferred in the terminal. Later user edits are preserved on upgrades.
 - **File icon theme** with 38 SVG assets, mappings for common extensions and filenames, and distinct folder states.
 - **Product icon theme** with 24 original glyphs for project and symbol views.
 - **Java semantic highlighting** for types, methods, and readonly `UPPER_CASE` constants when a Java language server provides semantic tokens.
@@ -52,10 +54,18 @@ The latest release is **0.5.0**. GitHub Releases include installable VSIX packag
 You can also install from a terminal:
 
 ```sh
-code --install-extension ./idea-workspace-0.5.0.vsix
+code --install-extension ./idea-workspace-0.6.0.vsix
 ```
 
 Replace the filename with the version you downloaded. After installation, the theme and icon themes apply automatically when the extension activates.
+
+### Bundled font
+
+On desktop, the extension installs the bundled, unmodified JetBrains Mono 2.304 Regular, Bold, Italic and Bold Italic fonts for the current user if that font family is not already available. Installation works offline and does not request administrator privileges. Linux requires fontconfig (`fc-match` and `fc-cache`). If installation is unavailable or blocked, the appearance settings use fallback fonts; retry with **IDEA Workspace: Install or Retry Font Setup**.
+
+If the new font is not visible immediately, fully quit and reopen VS Code. Restore reverses extension-managed font settings and pauses automatic setup, but Restore and uninstall leave the installed font available to other applications. A separately installed Nerd Font is needed for all prompt icons; bundled JetBrains Mono is the original upstream font.
+
+JetBrains Mono is licensed separately under SIL OFL 1.1. Its copyright and complete license are included in [OFL.txt](fonts/jetbrains-mono/OFL.txt); see [third-party notices](THIRD_PARTY_NOTICES.md).
 
 ## Optional workbench customization
 
@@ -79,6 +89,7 @@ Open the Command Palette and search for **IDEA Workspace**:
 | `IDEA Workspace: Apply UI and Logo` | Reapply the extension presets for the theme, icons, UI colors, and logo. Use this to return to the extension's appearance settings. |
 | `IDEA Workspace: Open Setup` | Open the setup menu. |
 | `IDEA Workspace: Choose Logo (SVG or PNG)` | Choose a new logo; the extension applies it automatically. |
+| `IDEA Workspace: Install or Retry Font Setup` | Retry installing bundled JetBrains Mono for the current user. |
 | `IDEA Workspace: Reload Window to Load UI` | Reload VS Code after the workbench CSS changes. |
 | `IDEA Workspace: Diagnose UI and Logo` | Inspect the current state and troubleshoot setup. |
 | `IDEA Workspace: Restore UI and Settings` | Undo extension-managed changes while preserving your later edits. |
@@ -129,7 +140,7 @@ See the [changelog](CHANGELOG.md) for project history and [GitHub Releases](http
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+The extension code is licensed under the [MIT License](LICENSE). Bundled JetBrains Mono fonts retain their [SIL OFL 1.1 license](fonts/jetbrains-mono/OFL.txt).
 
 ## Upgrades and Restore
 

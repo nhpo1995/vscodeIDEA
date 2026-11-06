@@ -2,8 +2,8 @@
   "name": "idea-workspace",
   "displayName": "IDEA-inspired Workspace",
   "description": "IDEA-inspired appearance with automatic theme, icons and reversible custom chrome. Native VS Code workflows stay unchanged.",
-  "version": "0.5.1",
-  "publisher": "local-workspace",
+  "version": "0.6.0",
+  "publisher": "nhpdev95",
   "repository": {
     "type": "git",
     "url": "https://github.com/nhpo1995/vscodeIDEA.git"
@@ -51,6 +51,10 @@
       }
     ],
     "commands": [
+      {
+        "command": "ideaWorkspace.installFonts",
+        "title": "IDEA Workspace: Install or Retry Font Setup"
+      },
       {
         "command": "ideaWorkspace.apply",
         "title": "IDEA Workspace: Apply UI and Logo"

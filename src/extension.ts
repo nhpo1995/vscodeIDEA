@@ -10,6 +10,7 @@ import {prepareAdminScripts} from './admin';
 import {preset} from './preset';
 import {registerConstantHighlighting} from './highlighting';
 import {inspectChrome,shouldAutoApply,needsReload,ChromeAttempt,PendingReload} from './chrome';
+import {ensureFontInstalled} from './fonts';
 
 export async function activate(context:vscode.ExtensionContext):Promise<void>{
  const output=vscode.window.createOutputChannel('IDEA Workspace');
@@ -72,7 +73,26 @@ export async function activate(context:vscode.ExtensionContext):Promise<void>{
    void vscode.window.showWarningMessage('IDEA Workspace: '+message);
   }finally{busy=false;await refresh();}
  };
+ let fontSetup:Promise<void>|undefined;
+ const prepareFonts=():Promise<void>=>{
+  if(vscode.env.uiKind!==vscode.UIKind.Desktop)return Promise.resolve();
+  return fontSetup??=(async()=>{
+   try{
+    const result=await ensureFontInstalled({sourceDir:context.asAbsolutePath('fonts/jetbrains-mono')});
+    await context.globalState.update('fontStatus',result);
+    output.appendLine('JetBrains Mono: '+result.state+(result.directory?' — '+result.directory:''));
+    if(result.state==='installed')void vscode.window.showInformationMessage('JetBrains Mono installed for your user account. Fully quit and reopen VS Code if the new font is not visible. Restore leaves the installed font available to other applications.');
+   }catch(error){
+    const message=error instanceof Error?error.message:String(error);
+    const previous=context.globalState.get<{state:string;error?:string}>('fontStatus');
+    await context.globalState.update('fontStatus',{state:'failed',error:message});
+    output.appendLine('JetBrains Mono installation failed: '+message);
+    if(previous?.error!==message)void vscode.window.showWarningMessage('JetBrains Mono could not be installed. Appearance uses font fallbacks. Run IDEA Workspace: Install or Retry Font Setup to retry. Details are in the IDEA Workspace output.');
+   }
+  })();
+ };
  const appearance=async(mode:ApplyMode)=>{
+  await prepareFonts();
   await restoreSettings(host,key=>!Object.hasOwn(preset,key) && !key.startsWith('@idea-palette:'));
   const kept=await applySettings(host,preset,mode);
   const theme=JSON.parse(await fs.readFile(context.asAbsolutePath('themes/idea-dark.json'),'utf8'));
@@ -122,9 +142,11 @@ export async function activate(context:vscode.ExtensionContext):Promise<void>{
  };
  const apply=guarded(async()=>{
   await context.globalState.update('autoUiDisabled',false);
+  fontSetup=undefined;
   await appearance('explicit');await context.globalState.update('appearanceVersion',version);
   if(await patch())reloadNotice('Custom CSS installed on disk.');
  });
+ const installFonts=guarded(async()=>{fontSetup=undefined;await prepareFonts();});
  const restore=guarded(async()=>{
   await context.globalState.update('autoUiDisabled',true);
   const state=await readWorkbench();let changed:boolean;
@@ -153,6 +175,7 @@ export async function activate(context:vscode.ExtensionContext):Promise<void>{
   output.clear();output.appendLine(`VS Code ${vscode.version}; ${process.platform}\nWorkbench: ${state.target}\nWritable: ${writable}\nDesired CSS: ${state.desiredError??state.snapshot.state}\nFingerprint: ${state.snapshot.fingerprint}`);
   output.appendLine('Last attempt: '+JSON.stringify(context.globalState.get('chromeAttempt')));
   output.appendLine('Pending reload: '+JSON.stringify(context.globalState.get('pendingReload')));
+  output.appendLine('Font setup: '+JSON.stringify(context.globalState.get('fontStatus')));
   output.appendLine('On-disk CSS status does not inspect the live renderer. Patch affects all profiles using this installation.');
   for(const key of [...Object.keys(preset),'window.titleBarStyle','workbench.colorCustomizations','vscode_custom_css.imports'])output.appendLine(`${key}: ${JSON.stringify(vscode.workspace.getConfiguration().get(key))}`);
   output.show();
@@ -163,14 +186,16 @@ export async function activate(context:vscode.ExtensionContext):Promise<void>{
    {label:'Apply UI and Logo',description:'Explicitly reapply appearance and retry custom chrome',id:'apply'},
    {label:'Reload Window',description:'Load changed CSS from disk',id:'reload'},
    {label:'Choose Logo',id:'selectLogo'},
+   {label:'Install or Retry Font Setup',description:'Install bundled JetBrains Mono for this user account',id:'installFonts'},
    {label:'Diagnose UI and Logo',id:'diagnose'},
    {label:'Restore UI and Settings',id:'restore'}
   ],{title:'IDEA Workspace — appearance only'});
   if(choice)await vscode.commands.executeCommand('ideaWorkspace.'+choice.id);
  };
- for(const [id,handler] of Object.entries({apply,restore,selectLogo,setup,diagnose,reload:requestReload}))context.subscriptions.push(vscode.commands.registerCommand('ideaWorkspace.'+id,handler));
+ for(const [id,handler] of Object.entries({apply,restore,installFonts,selectLogo,setup,diagnose,reload:requestReload}))context.subscriptions.push(vscode.commands.registerCommand('ideaWorkspace.'+id,handler));
  await guarded(async()=>{
   const disabled=context.globalState.get<boolean>('autoUiDisabled');
+  if(!disabled)await prepareFonts();
   if(!disabled && context.globalState.get<string>('appearanceVersion')!==version){
    const upgrade=!!context.globalState.get('appearanceVersion') || !!host.load();
    await appearance(upgrade?'upgrade':'explicit');await context.globalState.update('appearanceVersion',version);
