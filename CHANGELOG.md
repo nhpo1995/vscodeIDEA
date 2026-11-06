@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.0
+
+- Complete the terminal's 16-color ANSI palette and add coordinated cursor and selection colors for application logs and shell output.
+- Apply JetBrains Mono terminal font preferences with installed-font fallbacks, 14px sizing and 1.2 line spacing; preserve later user edits on upgrades and restore previous settings on request.
+- Bundle original JetBrains Mono 2.304 fonts and SIL OFL 1.1; install missing fonts per user on desktop, apply editor typography, and provide retry without blocking theme setup. Restore/uninstall leave shared fonts installed.
+
 ## 0.5.0
 
 - Inspect exact CSS on every activation; recover missing patches after same-version reinstalls, and suppress repeated failed authorization attempts for unchanged targets.
