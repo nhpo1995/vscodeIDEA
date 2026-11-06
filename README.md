@@ -1,21 +1,18 @@
 <div align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="media/logo-header.svg">
-    <img src="media/logo-wordmark.svg" alt="NhpDev" width="220">
-  </picture>
+  <img src="media/extension-icon.png" alt="NhpDev" width="128">
   <h1>IDEA-inspired Workspace</h1>
   <p>An IntelliJ-inspired appearance for Visual Studio Code that keeps native VS Code workflows intact.</p>
   <p><strong>Created by NhpDev</strong></p>
   <p>
-    <a href="https://github.com/nhpo1995/vscodeIDEA-nhpdev/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/nhpo1995/vscodeIDEA-nhpdev?display_name=tag&sort=semver"></a>
-    <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/github/license/nhpo1995/vscodeIDEA-nhpdev"></a>
+    <a href="https://github.com/nhpo1995/vscodeIDEA/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/nhpo1995/vscodeIDEA?display_name=tag&sort=semver"></a>
+    <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/github/license/nhpo1995/vscodeIDEA"></a>
     <img alt="Visual Studio Code 1.95 or later" src="https://img.shields.io/badge/VS%20Code-1.95%2B-007ACC?logo=visualstudiocode&logoColor=white">
-    <a href="https://github.com/nhpo1995/vscodeIDEA-nhpdev/releases"><img alt="GitHub release downloads" src="https://img.shields.io/github/downloads/nhpo1995/vscodeIDEA-nhpdev/total?label=downloads"></a>
-    <a href="https://github.com/nhpo1995/vscodeIDEA-nhpdev/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/nhpo1995/vscodeIDEA-nhpdev"></a>
-    <a href="https://github.com/nhpo1995/vscodeIDEA-nhpdev/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/nhpo1995/vscodeIDEA-nhpdev"></a>
+    <a href="https://github.com/nhpo1995/vscodeIDEA/releases"><img alt="GitHub release downloads" src="https://img.shields.io/github/downloads/nhpo1995/vscodeIDEA/total?label=downloads"></a>
+    <a href="https://github.com/nhpo1995/vscodeIDEA/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/nhpo1995/vscodeIDEA"></a>
+    <a href="https://github.com/nhpo1995/vscodeIDEA/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/nhpo1995/vscodeIDEA"></a>
   </p>
   <p>
-    <a href="https://github.com/nhpo1995/vscodeIDEA-nhpdev/releases">Download a release</a>
+    <a href="https://github.com/nhpo1995/vscodeIDEA/releases">Download a release</a>
     ·
     <a href="CHANGELOG.md">Changelog</a>
     ·
@@ -47,7 +44,7 @@ The latest release is **0.5.0**. GitHub Releases include installable VSIX packag
 
 ### Install from GitHub Releases
 
-1. Open [Releases](https://github.com/nhpo1995/vscodeIDEA-nhpdev/releases) and choose a version.
+1. Open [Releases](https://github.com/nhpo1995/vscodeIDEA/releases) and choose a version.
 2. Download that release's `idea-workspace-<version>.vsix` asset.
 3. In VS Code, open the Command Palette and run **Extensions: Install from VSIX...**.
 4. Select the downloaded VSIX file.
@@ -108,8 +105,8 @@ The file icon theme classifies files by extension and filename. It does not insp
 Requirements: Node.js and npm. The runtime extension has no external runtime dependencies.
 
 ```sh
-git clone https://github.com/nhpo1995/vscodeIDEA-nhpdev.git
-cd vscodeIDEA-nhpdev
+git clone https://github.com/nhpo1995/vscodeIDEA.git
+cd vscodeIDEA
 npm ci
 npm test
 npm run package
@@ -128,7 +125,32 @@ Bug reports, corrections, and focused pull requests are welcome. For larger chan
 
 ## Releases
 
-See the [changelog](CHANGELOG.md) for project history and [GitHub Releases](https://github.com/nhpo1995/vscodeIDEA-nhpdev/releases) for tags and downloadable VSIX files.
+See the [changelog](CHANGELOG.md) for project history and [GitHub Releases](https://github.com/nhpo1995/vscodeIDEA/releases) for tags and downloadable VSIX files.
+
+### Automatic Marketplace publishing
+
+The pipelines have separate responsibilities:
+
+- **CI** ([ci.yml](.github/workflows/ci.yml)): on pushes to `main` and pull requests, run tests, verify VSIX packaging, and save the validation package as a workflow artifact. It does not need a Marketplace publisher or publishing credentials.
+- **CD** ([cd.yml](.github/workflows/cd.yml)): on a published stable GitHub Release, validate the tag/version, rerun tests against the exact tagged commit, build the release VSIX, save it as a workflow artifact, and publish that exact VSIX to the VS Code Marketplace. Only CD requests an OIDC publishing token. Pushing commits or tags alone, draft releases and prereleases do not publish to the Marketplace.
+
+One-time setup:
+
+1. Create or select your publisher at [Marketplace Management](https://marketplace.visualstudio.com/manage). Use its **ID**, not its display name.
+2. In GitHub repository **Settings → Secrets and variables → Actions → Variables**, create `MARKETPLACE_PUBLISHER_ID` with that ID. This is a repository variable, not a secret. CD sets the packaged publisher from this variable; CI and local builds keep the publisher declared in the manifest. Keep the variable unchanged for future updates to the same extension.
+3. Under the Marketplace publisher, open **Trusted Publishing** and create a policy with repository owner `nhpo1995`, repository `vscodeIDEA`, workflow `cd.yml`, and no environment. No PAT or Azure secret is needed. For a private repository, run the workflow within 48 hours of creating the policy. If a policy already names `publish-marketplace.yml`, replace it with one for `cd.yml`.
+4. Push the publishing workflow and packaging changes before creating the release. The released tag must include these changes; old tags will not acquire the new workflow.
+
+For each release, including the first Marketplace release:
+
+1. Update the version and lockfile with `npm version 0.5.1 --no-git-tag-version` (replace `0.5.1` with the desired unused version), and update the changelog.
+2. Commit and push the changes to GitHub.
+3. Create and publish a GitHub Release using a matching tag such as `v0.5.1`, targeting that commit.
+4. Check **Actions → CD - Publish to VS Code Marketplace**. The packaged VSIX is available in the run artifacts, even if Marketplace publishing fails. Fix publisher/policy settings and rerun failed jobs if needed; an already published version is skipped on retry. Publishing a changed package requires a new version.
+
+Once published, the extension ID is `<MARKETPLACE_PUBLISHER_ID>.idea-workspace`. A local installation under `local-workspace.idea-workspace` has a different ID and will not automatically migrate to the Marketplace publisher.
+
+See Microsoft's [publishing guide](https://code.visualstudio.com/api/working-with-extensions/publishing-extension#publish-with-github-actions-and-trusted-publishing) for Trusted Publishing details.
 
 ## License
 

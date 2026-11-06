@@ -4,6 +4,10 @@
   "description": "IDEA-inspired appearance with automatic theme, icons and reversible custom chrome. Native VS Code workflows stay unchanged.",
   "version": "0.5.0",
   "publisher": "local-workspace",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nhpo1995/vscodeIDEA.git"
+  },
   "license": "MIT",
   "engines": {
     "vscode": "^1.95.0"
@@ -30,7 +34,7 @@
   "scripts": {
     "compile": "tsc -p .",
     "test": "npm run compile && node --test test/*.test.cjs",
-    "package": "npm run compile && vsce package --allow-missing-repository --no-rewrite-relative-links"
+    "package": "npm run compile && vsce package"
   },
   "devDependencies": {
     "@types/node": "^22.20.5",

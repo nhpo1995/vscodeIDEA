@@ -1,0 +1,69 @@
+name: CD - Publish to VS Code Marketplace
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: marketplace-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: ${{ !github.event.release.prerelease }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      RELEASE_TAG: ${{ github.event.release.tag_name }}
+      MARKETPLACE_PUBLISHER_ID: ${{ vars.MARKETPLACE_PUBLISHER_ID }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Validate release and configure publisher
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const manifest = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          const lock = JSON.parse(fs.readFileSync('package-lock.json', 'utf8'));
+          const publisher = process.env.MARKETPLACE_PUBLISHER_ID;
+          if (!publisher || publisher === 'local-workspace' || !/^[A-Za-z0-9][A-Za-z0-9-]*$/.test(publisher)) {
+            throw new Error('Set the GitHub Actions repository variable MARKETPLACE_PUBLISHER_ID to your Marketplace publisher ID.');
+          }
+          if (process.env.RELEASE_TAG !== `v${manifest.version}` || !/^\d+\.\d+\.\d+$/.test(manifest.version)) {
+            throw new Error('A stable release tag must exactly match v<package.json version>.');
+          }
+          if (lock.version !== manifest.version || lock.packages[''].version !== manifest.version) {
+            throw new Error('Update package-lock.json together with package.json before creating the release.');
+          }
+          manifest.publisher = publisher;
+          fs.writeFileSync('package.json', JSON.stringify(manifest, null, 2) + '\n');
+          NODE
+
+      - run: npm ci
+      - run: npm test
+
+      - name: Package the release
+        run: npm run package -- --githubBranch "$RELEASE_TAG" --out marketplace.vsix
+
+      - name: Save the VSIX
+        uses: actions/upload-artifact@v4
+        with:
+          name: marketplace-vsix-${{ github.event.release.tag_name }}
+          path: marketplace.vsix
+          if-no-files-found: error
+
+      - name: Publish using Marketplace Trusted Publishing
+        run: npx --no-install vsce publish --oidc --packagePath marketplace.vsix --skip-duplicate
