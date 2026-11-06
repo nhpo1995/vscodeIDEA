@@ -1,0 +1,2 @@
+# Pinned upstream font assets and license must retain their exact SHA-256 on every OS.
+fonts/jetbrains-mono/* -text

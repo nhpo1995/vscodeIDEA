@@ -52,6 +52,14 @@
     ],
     "commands": [
       {
+        "command": "ideaWorkspace.search",
+        "title": "IDEA Workspace: Quick Search"
+      },
+      {
+        "command": "ideaWorkspace.switchProject",
+        "title": "IDEA Workspace: Switch Project"
+      },
+      {
         "command": "ideaWorkspace.installFonts",
         "title": "IDEA Workspace: Install or Retry Font Setup"
       },
@@ -80,9 +88,21 @@
         "title": "IDEA Workspace: Reload Window to Load UI"
       }
     ],
+    "keybindings": [
+      {
+        "key": "shift shift",
+        "command": "ideaWorkspace.search",
+        "when": "ideaWorkspace.navigationActive && config.ideaWorkspace.navigation.enabled && !terminalFocus"
+      }
+    ],
     "configuration": {
       "title": "IDEA Workspace",
       "properties": {
+        "ideaWorkspace.navigation.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable compact native menus, IDEA sidebar/search styling, double-Shift Quick Open and the project switcher. Restore pauses navigation until Apply is used again."
+        },
         "ideaWorkspace.logoPath": {
           "type": "string",
           "default": "",

@@ -23,7 +23,22 @@ async function replaceFile(target:string,content:string):Promise<void>{
   }
   finally {await fs.rm(temp,{force:true}).catch(()=>undefined);}
 }
-export async function applyPatch(target:string,storage:string,css:string,version:string):Promise<boolean>{
+function rendererName(source:string):string{return 'idea-workspace-menu-'+createHash('sha256').update(source).digest('hex').slice(0,32)+'.js';}
+export function renderPatch(css:string,renderer?:string):string{
+ return START+'<style id="idea-workspace-custom-ui">'+css+'</style>'+(renderer?'<script type="module" src="./'+rendererName(renderer)+'"></script>':'')+END;
+}
+export async function rendererAssetValid(target:string,source:string):Promise<boolean>{
+ try{const file=path.join(path.dirname(target),rendererName(source));return !(await fs.lstat(file)).isSymbolicLink() && await fs.readFile(file,'utf8')===source;}catch(error){if((error as NodeJS.ErrnoException).code==='ENOENT')return false;throw error;}
+}
+async function removeRendererAssets(target:string,html:string,keep?:string):Promise<void>{
+ const a=html.indexOf(START),b=html.indexOf(END);if(a<0||b<a)return;
+ for(const match of html.slice(a,b).matchAll(/src="\.\/(idea-workspace-menu-([a-f0-9]{32})\.js)"/g)){
+  if(match[1]===keep)continue;
+  const file=path.join(path.dirname(target),match[1]);
+  try{if(!(await fs.lstat(file)).isSymbolicLink() && createHash('sha256').update(await fs.readFile(file)).digest('hex').slice(0,32)===match[2])await fs.unlink(file);}catch(error){if((error as NodeJS.ErrnoException).code!=='ENOENT')throw error;}
+ }
+}
+export async function applyPatch(target:string,storage:string,css:string,version:string,renderer?:string):Promise<boolean>{
   if(/<\//i.test(css)) throw new Error('CSS contains an HTML closing tag.');
   const current=await fs.readFile(target,'utf8');
   const clean=strip(current);
@@ -31,20 +46,28 @@ export async function applyPatch(target:string,storage:string,css:string,version
   const meta=clean.match(/<meta\b[^>]*http-equiv=["']Content-Security-Policy["'][^>]*>/i)?.[0];
   const content=meta?.match(/content="([^"]*)"/i)?.[1];
   if(!content || !/style-src\s+[^;]*'unsafe-inline'/i.test(content) || !/img-src\s+[^;]*\bdata:/i.test(content)) throw new Error('Unsupported workbench CSP. This extension will not disable CSP.');
-  const block=START+'<style id="idea-workspace-custom-ui">'+css+'</style>'+END;
+  if(renderer && !/script-src\s+[^;]*'self'/i.test(content))throw new Error('Unsupported renderer CSP. This extension will not disable CSP.');
+  let assetChanged=false;
+  if(renderer && !await rendererAssetValid(target,renderer)){
+   const file=path.join(path.dirname(target),rendererName(renderer));
+   try{const stat=await fs.lstat(file);if(stat.isSymbolicLink()||!stat.isFile())throw Error('Refusing non-file renderer asset.');await replaceFile(file,renderer);}catch(error){if((error as NodeJS.ErrnoException).code!=='ENOENT')throw error;await fs.writeFile(file,renderer,{flag:'wx',mode:(await fs.stat(target)).mode});}
+   assetChanged=true;
+  }
+  const block=renderPatch(css,renderer);
   const next=clean.replace(/<\/head\s*>/i,block+'</head>');
-  if(next===current) return false;
+  if(next===current) return assetChanged;
   await fs.mkdir(storage,{recursive:true});
   const hash=createHash('sha256').update(clean).digest('hex');
   const backup=path.join(storage,version.replace(/[^\w.-]/g,'_')+'-'+hash+'.html');
   try{await fs.writeFile(backup,clean,{flag:'wx'});}catch(e){if((e as NodeJS.ErrnoException).code!=='EEXIST')throw e;}
   await replaceFile(target,next);
+  await removeRendererAssets(target,current,renderer?rendererName(renderer):undefined);
   return true;
 }
 export async function restorePatch(target:string):Promise<boolean>{
   const current=await fs.readFile(target,'utf8'), clean=strip(current);
   if(clean===current)return false;
-  await replaceFile(target,clean);return true;
+  await replaceFile(target,clean);await removeRendererAssets(target,current);return true;
 }
 export async function findWorkbench(appRoot:string):Promise<string>{
   for(const rel of ['out/vs/code/electron-browser/workbench/workbench.html','out/vs/code/electron-sandbox/workbench/workbench.html']){
@@ -68,7 +91,7 @@ export async function logoDataUri(file:string):Promise<string>{
   }
   throw new Error('Choose an SVG or PNG logo.');
 }
-export function renderCss(uri:string,compact:boolean,wordmark=false):string{
+export function renderCss(uri:string,compact:boolean,wordmark=false,navigation=false):string{
   if(!/^data:image\/(?:png|svg\+xml);base64,[A-Za-z0-9+/=]+$/.test(uri))throw new Error('Invalid logo data URI.');
   return `/* idea-workspace:ui-0.4.1 — appearance only */
 .monaco-workbench .part.titlebar .window-appicon {
@@ -127,5 +150,24 @@ export function renderCss(uri:string,compact:boolean,wordmark=false):string{
 .monaco-workbench .part.statusbar, .monaco-workbench .part.statusbar .statusbar-item { border-color: var(--idea-border); font-size: 13px !important; }
 .monaco-workbench .monaco-scrollable-element > .scrollbar > .slider { border-radius: 5px; }
 .monaco-workbench .quick-input-widget { border: 1px solid #4E5157; border-radius: 8px; }
+${navigation?`/* idea-workspace:navigation-1 — preserve native geometry and interaction */
+.monaco-workbench .part.sidebar, .monaco-workbench .part.auxiliarybar {
+ border-radius: 10px !important;
+ outline: 1px solid var(--idea-border); outline-offset: -1px;
+}
+.monaco-workbench .part.sidebar .composite.title,
+.monaco-workbench .part.auxiliarybar .composite.title { border-radius: 10px 10px 0 0; }
+.monaco-workbench .part.activitybar .action-item:hover .action-label { background-color: #34373B; }
+.monaco-workbench .part.activitybar .action-item.checked .action-label { background-color: #35404D; }
+.monaco-workbench .quick-input-widget {
+ border: 1px solid #4E5157 !important; border-radius: 10px !important;
+ box-shadow: 0 12px 32px #00000066 !important;
+ background: var(--vscode-quickInput-background, #2B2D30) !important;
+}
+.monaco-workbench .quick-input-widget .monaco-inputbox { border-radius: 6px !important; }
+.monaco-workbench .quick-input-widget .monaco-list-row { border-radius: 5px; }
+.monaco-workbench .quick-input-widget .monaco-list-row.focused { outline-offset: -1px; }
+.monaco-workbench .monaco-menu .monaco-action-bar.vertical .action-item .action-label { border-radius: 5px; }
+`:''}
 ${compact?`.monaco-workbench .part.sidebar .composite.title { padding-left: 12px; }`:''}`;
 }

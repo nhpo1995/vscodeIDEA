@@ -31,6 +31,8 @@ This source tree contains version **0.6.0**. See [GitHub Releases](https://githu
 ## Features
 
 - **IDEA-inspired Dark theme** with a neutral editor background and coordinated syntax colors.
+- **Compact native navigation** with a hamburger menu on Windows/Linux, sidebar and Quick Input styling, and a project switcher in the status bar using VS Code's Open Recent.
+- **Double-Shift Quick Search** opens native Quick Open: type a filename, `>` for commands, `#` for workspace symbols, or `@` for symbols in the active file. Terminal shortcuts are preserved.
 - **Coordinated terminal colors** with a complete 16-color ANSI palette, cursor and selections. Application log colors require ANSI output from the application; the theme controls the palette, not log-level detection.
 - **Automatic editor and terminal typography** uses JetBrains Mono at 14px, with 1.2 terminal line spacing. The original font is bundled and installed for the current desktop user when missing; an existing Nerd Font variant is preferred in the terminal. Later user edits are preserved on upgrades.
 - **File icon theme** with 38 SVG assets, mappings for common extensions and filenames, and distinct folder states.
@@ -89,12 +91,20 @@ Open the Command Palette and search for **IDEA Workspace**:
 | `IDEA Workspace: Apply UI and Logo` | Reapply the extension presets for the theme, icons, UI colors, and logo. Use this to return to the extension's appearance settings. |
 | `IDEA Workspace: Open Setup` | Open the setup menu. |
 | `IDEA Workspace: Choose Logo (SVG or PNG)` | Choose a new logo; the extension applies it automatically. |
+| `IDEA Workspace: Quick Search` | Open native Quick Open, also available with double Shift outside the terminal. |
+| `IDEA Workspace: Switch Project` | Open recent folders/workspaces using the native project picker. |
 | `IDEA Workspace: Install or Retry Font Setup` | Retry installing bundled JetBrains Mono for the current user. |
 | `IDEA Workspace: Reload Window to Load UI` | Reload VS Code after the workbench CSS changes. |
 | `IDEA Workspace: Diagnose UI and Logo` | Inspect the current state and troubleshoot setup. |
 | `IDEA Workspace: Restore UI and Settings` | Undo extension-managed changes while preserving your later edits. |
 
 The `ideaWorkspace.logoPath` setting accepts an absolute path to a local SVG or PNG. Leave it empty to use the bundled NhpDev logo. The logo picker applies the selection automatically.
+
+### Navigation preferences
+
+Set `ideaWorkspace.navigation.enabled` to `false` to disable the compact layout, project control and double-Shift shortcut while retaining the theme, fonts and icon themes. Disabling it restores layout settings still managed by the extension. Changed custom CSS may require a window reload. Switching between native and custom title bars can require fully quitting and reopening VS Code. Restore pauses navigation as well as automatic appearance setup until Apply is used again.
+
+Quick Search keeps VS Code's existing search modes and results. Quick Open, Command Palette and Open Recent share the styled Quick Input UI; this does not add IntelliJ search tabs or a custom search engine. The project picker opens VS Code's existing recent folders/workspaces. Third-party views stay in their native containers and can be moved using VS Code's layout controls. Native macOS application menus are retained.
 
 ## Java highlighting
 
