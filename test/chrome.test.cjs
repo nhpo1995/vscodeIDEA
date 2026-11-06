@@ -22,3 +22,10 @@ test('pending CSS never implies live DOM; only requested reload or new app sessi
  assert.equal(needsReload({...pending,reloadRequested:true},'hash','s1'),false);
  assert.equal(needsReload(pending,'different','s1'),false);
 });
+
+test('renderer content participates in chrome freshness and reload fingerprint',()=>{
+ const {inspectChrome}=require('../dist/chrome'),{renderPatch}=require('../dist/patcher');
+ const html='<head>'+renderPatch('a{}','renderer1')+'</head>';
+ const old=inspectChrome(html,'a{}','/app','1','renderer1'),next=inspectChrome(html,'a{}','/app','1','renderer2');
+ assert.equal(old.state,'current');assert.equal(next.state,'outdated');assert.notEqual(old.cssHash,next.cssHash);
+});

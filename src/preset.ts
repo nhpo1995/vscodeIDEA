@@ -14,3 +14,12 @@ export const preset:Record<string,unknown>={
  'terminal.integrated.lineHeight':1.2,
  'terminal.integrated.letterSpacing':0
 };
+
+/** Layout preferences are journaled separately so disabling navigation restores only these keys. */
+export function navigationPreset(platform:string):Record<string,unknown>{
+ return {
+  'workbench.sideBar.location':'left',
+  'workbench.activityBar.location':'default',
+  ...(['win32','linux'].includes(platform)?{'window.titleBarStyle':'custom','window.menuBarVisibility':'toggle'}:{})
+ };
+}

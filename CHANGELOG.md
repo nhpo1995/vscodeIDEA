@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Add compact native menus on Windows/Linux, coordinated sidebar/menu/Quick Input styling, and a status bar project switcher backed by Open Recent.
+- Bind double Shift to native Quick Open outside the terminal; keep native file, symbol and command search modes.
+- Add a navigation preference and journal layout changes so disabling navigation or Restore preserves later user edits and restores owned settings.
+- Preserve original font asset and license bytes across Git checkouts to prevent Windows line-ending conversion from breaking bundled-font integrity checks.
+
 ## 0.6.0
 
 - Complete the terminal's 16-color ANSI palette and add coordinated cursor and selection colors for application logs and shell output.
