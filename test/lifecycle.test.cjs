@@ -103,3 +103,27 @@ test('same-version restart reconciles offline navigation changes without resetti
  if(process.platform!=='darwin')assert.equal(enabled.settings.get('window.menuBarVisibility'),'toggle');
  assert.equal(enabled.menuStatus.visible,process.platform!=='darwin');assert.equal(enabled.contexts.get('ideaWorkspace.navigationActive'),true);assert.equal(enabled.settings.get('editor.fontSize'),18);
 });
+
+test('search layout hides navigation buttons and returns the original preference on Disable and Restore',{skip:!['win32','linux'].includes(process.platform)},async t=>{
+ for(const exit of ['disable','restore']){
+  const f=await fixture(t,{settings:{'workbench.navigationControl.enabled':true}});
+  await f.commands.get('ideaWorkspace.apply')();
+  assert.equal(f.settings.get('workbench.navigationControl.enabled'),false);
+  if(exit==='restore')await f.commands.get('ideaWorkspace.restore')();
+  else {
+   const shown=f.status.shown;f.changeConfig('ideaWorkspace.navigation.enabled',false);
+   for(let i=0;i<60 && f.status.shown===shown;i++)await new Promise(r=>setTimeout(r,20));
+   assert.ok(f.status.shown>shown,'navigation configuration processed');
+  }
+  assert.equal(f.settings.get('workbench.navigationControl.enabled'),true);
+ }
+});
+
+test('search layout Restore preserves a later navigation preference instead of deleting it',{skip:!['win32','linux'].includes(process.platform)},async t=>{
+ const f=await fixture(t);
+ await f.commands.get('ideaWorkspace.apply')();
+ assert.equal(f.settings.get('workbench.navigationControl.enabled'),false);
+ f.settings.set('workbench.navigationControl.enabled',true);
+ await f.commands.get('ideaWorkspace.restore')();
+ assert.equal(f.settings.get('workbench.navigationControl.enabled'),true);
+});

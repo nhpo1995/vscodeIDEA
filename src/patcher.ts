@@ -150,7 +150,27 @@ export function renderCss(uri:string,compact:boolean,wordmark=false,navigation=f
 .monaco-workbench .part.statusbar, .monaco-workbench .part.statusbar .statusbar-item { border-color: var(--idea-border); font-size: 13px !important; }
 .monaco-workbench .monaco-scrollable-element > .scrollbar > .slider { border-radius: 5px; }
 .monaco-workbench .quick-input-widget { border: 1px solid #4E5157; border-radius: 8px; }
-${navigation?`/* idea-workspace:navigation-1 — preserve native geometry and interaction */
+${navigation?`/* idea-workspace:search-1 — keep native search actions and menu lifecycle */
+.idea-workspace-menu-enhanced .monaco-workbench .part.titlebar .titlebar-container:has(.command-center-quick-pick) > .titlebar-left { flex: 1 1 auto !important; min-width: 0; }
+.idea-workspace-menu-enhanced .monaco-workbench .part.titlebar .titlebar-container:has(.command-center-quick-pick) > .titlebar-center { flex: 0 0 auto !important; width: auto !important; margin: 0 4px !important; }
+.idea-workspace-menu-enhanced .monaco-workbench .part.titlebar .titlebar-container:has(.command-center-quick-pick) > .titlebar-right { flex: 0 0 auto !important; }
+.idea-workspace-menu-enhanced .monaco-workbench .part.titlebar .command-center .action-item.command-center-center { display:flex !important; width:28px !important; max-width:28px !important; height:28px !important; margin:0 !important; padding:0 !important; border:0 !important; border-radius:5px !important; background:transparent !important; color:inherit !important; }
+.idea-workspace-menu-enhanced .monaco-workbench .part.titlebar .command-center .command-center-quick-pick { flex:0 0 28px !important; width:28px !important; height:28px !important; margin:0 !important; padding:0 !important; justify-content:center !important; align-items:center !important; app-region:no-drag; -webkit-app-region:no-drag; }
+.idea-workspace-menu-enhanced .monaco-workbench .part.titlebar .command-center .command-center-quick-pick::before { content:""; display:block; width:16px; height:16px; background:currentColor; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='6.5' cy='6.5' r='4.5' fill='none' stroke='black' stroke-width='1.4'/%3E%3Cpath d='m10 10 4 4' stroke='black' stroke-width='1.4'/%3E%3C/svg%3E") center/contain no-repeat; }
+.idea-workspace-menu-enhanced .monaco-workbench .part.titlebar .command-center .command-center-quick-pick .search-label { position:absolute; width:1px; height:1px; clip-path:inset(50%); overflow:hidden; }
+.idea-workspace-menu-enhanced .monaco-workbench .part.titlebar .command-center .command-center-quick-pick .search-icon,
+.idea-workspace-menu-enhanced .monaco-workbench .part.titlebar .command-center .agent-status-container { display:none !important; }
+.idea-workspace-menu-enhanced .monaco-workbench .part.titlebar .command-center .command-center-quick-pick:hover { background:var(--vscode-toolbar-hoverBackground); }
+.idea-workspace-menu-enhanced .monaco-workbench .part.titlebar .command-center .command-center-quick-pick:focus-visible { outline:1px solid var(--vscode-focusBorder); outline-offset:-2px; }
+/* Keep a native light surface behind dark theme-owned glyphs over the legacy dark gradient. */
+.idea-workspace-menu-enhanced .monaco-workbench:is(.vs,.hc-light) .part.titlebar .command-center .action-item.command-center-center {
+ background: var(--vscode-titleBar-activeBackground) !important; color: var(--vscode-titleBar-activeForeground) !important;
+}
+.idea-workspace-menu-enhanced .monaco-workbench:is(.vs,.hc-light) .part.titlebar.inactive .command-center .action-item.command-center-center {
+ background: var(--vscode-titleBar-inactiveBackground) !important; color: var(--vscode-titleBar-inactiveForeground) !important;
+}
+
+/* idea-workspace:navigation-1 — preserve native geometry and interaction */
 .monaco-workbench .part.sidebar, .monaco-workbench .part.auxiliarybar {
  border-radius: 10px !important;
  outline: 1px solid var(--idea-border); outline-offset: -1px;
@@ -160,9 +180,9 @@ ${navigation?`/* idea-workspace:navigation-1 — preserve native geometry and in
 .monaco-workbench .part.activitybar .action-item:hover .action-label { background-color: #34373B; }
 .monaco-workbench .part.activitybar .action-item.checked .action-label { background-color: #35404D; }
 .monaco-workbench .quick-input-widget {
- border: 1px solid #4E5157 !important; border-radius: 10px !important;
- box-shadow: 0 12px 32px #00000066 !important;
- background: var(--vscode-quickInput-background, #2B2D30) !important;
+ border: 1px solid var(--vscode-widget-border, transparent) !important; border-radius: 10px !important;
+ box-shadow: 0 12px 32px var(--vscode-widget-shadow, transparent) !important;
+ background: var(--vscode-quickInput-background) !important;
 }
 .monaco-workbench .quick-input-widget .monaco-inputbox { border-radius: 6px !important; }
 .monaco-workbench .quick-input-widget .monaco-list-row { border-radius: 5px; }

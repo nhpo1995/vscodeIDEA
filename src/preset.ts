@@ -20,6 +20,6 @@ export function navigationPreset(platform:string):Record<string,unknown>{
  return {
   'workbench.sideBar.location':'left',
   'workbench.activityBar.location':'default',
-  ...(['win32','linux'].includes(platform)?{'window.titleBarStyle':'custom','window.menuBarVisibility':'toggle'}:{})
+  ...(['win32','linux'].includes(platform)?{'window.titleBarStyle':'custom','window.menuBarVisibility':'toggle','workbench.navigationControl.enabled':false}:{})
  };
 }
