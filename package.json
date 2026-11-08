@@ -2,7 +2,7 @@
   "name": "idea-workspace",
   "displayName": "IDEA-inspired Workspace",
   "description": "IDEA-inspired appearance with automatic theme, icons and reversible custom chrome. Native VS Code workflows stay unchanged.",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "publisher": "nhpdev95",
   "repository": {
     "type": "git",
@@ -48,6 +48,11 @@
         "label": "IDEA-inspired Dark",
         "uiTheme": "vs-dark",
         "path": "./themes/idea-dark.json"
+      },
+      {
+        "label": "IDEA-inspired Light",
+        "uiTheme": "vs",
+        "path": "./themes/idea-light.json"
       }
     ],
     "commands": [
@@ -133,6 +138,26 @@
           "dark": "#C792EA",
           "light": "#8040A0",
           "highContrast": "#E4B5FF"
+        }
+      },
+      {
+        "id": "ideaWorkspace.frameGradientStart",
+        "description": "Theme-owned outer frame gradient start. Unset uses the active VS Code theme frame colors.",
+        "defaults": {
+          "dark": "focusBorder",
+          "light": "focusBorder",
+          "highContrast": "focusBorder",
+          "highContrastLight": "focusBorder"
+        }
+      },
+      {
+        "id": "ideaWorkspace.frameGradientEnd",
+        "description": "Theme-owned outer frame gradient end. Unset uses the active VS Code theme frame colors.",
+        "defaults": {
+          "dark": "titleBar.activeBackground",
+          "light": "titleBar.activeBackground",
+          "highContrast": "titleBar.activeBackground",
+          "highContrastLight": "titleBar.activeBackground"
         }
       }
     ]

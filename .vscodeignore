@@ -14,3 +14,4 @@ scripts/**
 !docs/screenshots/logo-dark-0.4.1.png
 !docs/screenshots/icons-0.4.2.png
 .github/**
+.superpowers/**

@@ -29,3 +29,13 @@ test('renderer content participates in chrome freshness and reload fingerprint',
  const old=inspectChrome(html,'a{}','/app','1','renderer1'),next=inspectChrome(html,'a{}','/app','1','renderer2');
  assert.equal(old.state,'current');assert.equal(next.state,'outdated');assert.notEqual(old.cssHash,next.cssHash);
 });
+
+test('changed authorization policy retries a failed installation only once and never overrides current/damaged UI',()=>{
+ const {shouldAutoApply}=require('../dist/chrome');const snapshot={state:'missing',fingerprint:'same',cssHash:'css'};
+ const last={fingerprint:'same',outcome:'failed',error:'Authorization unavailable'};
+ assert.equal(shouldAutoApply(snapshot,last,'linux-session-1'),true);
+ assert.equal(shouldAutoApply(snapshot,{...last,authorizationRevision:'linux-session-1'},'linux-session-1'),false);
+ assert.equal(shouldAutoApply({...snapshot,state:'current'},last,'linux-session-1'),false);
+ assert.equal(shouldAutoApply({...snapshot,state:'damaged'},last,'linux-session-1'),false);
+ assert.equal(shouldAutoApply(snapshot,{...last,outcome:'attempting'},'linux-session-1'),false);
+});

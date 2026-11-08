@@ -16,7 +16,7 @@ async function fixture(t,options={}){
  class Disposable{constructor(fn){this.dispose=fn}};
  const vscode={Disposable,ThemeColor:class{},DecorationRangeBehavior:{ClosedClosed:1},StatusBarAlignment:{Left:1},UIKind:{Desktop:1},ConfigurationTarget:{Global:1},env:{appRoot:app,version:'1.145.0',sessionId:'session',uiKind:1},version:'1.145.0',
   window:{createOutputChannel:()=>({appendLine(){},clear(){},show(){},dispose(){}}),createStatusBarItem:id=>id==='ideaWorkspace.menu'?menuStatus:typeof id==='string'?projectStatus:status,createTextEditorDecorationType:noop,visibleTextEditors:[],onDidChangeVisibleTextEditors:noop,showWarningMessage:async()=>undefined,showInformationMessage:async()=>undefined},
-  workspace:{name:'Test workspace',workspaceFolders:[{name:'Test workspace'}],onDidChangeWorkspaceFolders:noop,getConfiguration:(section)=>({get:(key,defaultValue)=>settings.get(section?section+'.'+key:key)??defaultValue,inspect:key=>({globalValue:settings.get(section?section+'.'+key:key)}),update:async(key,value)=>{if(failWrites)throw Error('settings failed');if(value===undefined)settings.delete(key);else settings.set(key,value);}}),onDidChangeTextDocument:noop,onDidCloseTextDocument:noop,onDidChangeConfiguration:fn=>{configurationListeners.push(fn);return noop()}},
+  workspace:{name:'Test workspace',workspaceFolders:[{name:'Test workspace'}],onDidChangeWorkspaceFolders:noop,getConfiguration:(section)=>({get:(key,defaultValue)=>settings.get(section?section+'.'+key:key)??defaultValue,inspect:key=>({key,globalValue:settings.get(section?section+'.'+key:key),defaultValue:key==='window.controlsStyle'&&options.controlsStyle?'native':key==='workbench.experimental.modernUI' && options.modernUI?true:undefined}),update:async(key,value)=>{if(failWrites)throw Error('settings failed');if(value===undefined)settings.delete(key);else settings.set(key,value);}}),onDidChangeTextDocument:noop,onDidCloseTextDocument:noop,onDidChangeConfiguration:fn=>{configurationListeners.push(fn);return noop()}},
   commands:{registerCommand:(id,handler)=>{commands.set(id,handler);return noop()},executeCommand:async(id,...args)=>{if(id==='setContext'){contexts.set(args[0],args[1]);return;}return commands.get(id)?.(...args)}}};
  const commands=new Map();
  const context={subscriptions:[],extension:{packageJSON:{version:'0.5.0'}},globalStorageUri:{fsPath:path.join(root,'storage')},asAbsolutePath:rel=>path.join(__dirname,'..',rel),globalState:{get:key=>state.get(key),update:async(key,value)=>{if(value===undefined)state.delete(key);else state.set(key,value);}}};
@@ -126,4 +126,85 @@ test('search layout Restore preserves a later navigation preference instead of d
  f.settings.set('workbench.navigationControl.enabled',true);
  await f.commands.get('ideaWorkspace.restore')();
  assert.equal(f.settings.get('workbench.navigationControl.enabled'),true);
+});
+
+// Catch Apply stealing theme selection, or discarding historical ownership before Restore.
+test('first activation and repeated Apply preserve external theme selection',async t=>{
+ const f=await fixture(t,{enabled:true,settings:{'workbench.colorTheme':'Dracula'},state:{appearanceVersion:undefined,settingsJournal:undefined}});
+ assert.equal(f.settings.get('workbench.colorTheme'),'Dracula');
+ await f.commands.get('ideaWorkspace.apply')();
+ assert.equal(f.settings.get('workbench.colorTheme'),'Dracula');
+ assert.equal(f.state.get('settingsJournal')['workbench.colorTheme'],undefined);
+ await f.commands.get('ideaWorkspace.restore')();
+ assert.equal(f.settings.get('workbench.colorTheme'),'Dracula');
+});
+test('Apply keeps historical theme ownership until Restore without resetting a later theme',async t=>{
+ for(const selected of ['IDEA-inspired Dark','Default Dark+',undefined]){
+  const f=await fixture(t,{settings:{'workbench.colorTheme':selected}});
+  await f.commands.get('ideaWorkspace.apply')();
+  assert.equal(f.settings.get('workbench.colorTheme'),selected);
+  assert.deepEqual(f.state.get('settingsJournal')['workbench.colorTheme'],{before:'old',applied:'IDEA-inspired Dark'});
+  await f.commands.get('ideaWorkspace.restore')();
+  assert.equal(f.settings.get('workbench.colorTheme'),selected==='IDEA-inspired Dark'?'old':selected);
+ }
+});
+test('Apply leaves absent global theme absent so effective theme keeps its precedence',async t=>{
+ const f=await fixture(t,{settings:{'workbench.colorTheme':undefined},state:{settingsJournal:undefined}});
+ await f.commands.get('ideaWorkspace.apply')();
+ assert.equal(f.settings.get('workbench.colorTheme'),undefined);
+ assert.equal(f.state.get('settingsJournal')['workbench.colorTheme'],undefined);
+});
+
+// Catch unsupported setting writes, geometry being tied to navigation, and lost later edits.
+test('base surfaces opt into registered native geometry and restore its original preference',async t=>{
+ const key='workbench.experimental.modernUI';
+ const f=await fixture(t,{modernUI:true,settings:{[key]:false}});
+ await f.commands.get('ideaWorkspace.apply')();assert.equal(f.settings.get(key),true);
+ const shown=f.status.shown;f.changeConfig('ideaWorkspace.navigation.enabled',false);
+ for(let i=0;i<60 && f.status.shown===shown;i++)await new Promise(r=>setTimeout(r,20));
+ assert.equal(f.settings.get(key),true);
+ await f.commands.get('ideaWorkspace.restore')();assert.equal(f.settings.get(key),false);
+});
+test('base surfaces leave unregistered geometry untouched and preserve later user edits',async t=>{
+ const key='workbench.experimental.modernUI';
+ const old=await fixture(t);await old.commands.get('ideaWorkspace.apply')();assert.equal(old.settings.has(key),false);
+ const f=await fixture(t,{modernUI:true});await f.commands.get('ideaWorkspace.apply')();
+ assert.equal(f.settings.get(key),true);f.settings.set(key,false);
+ await f.commands.get('ideaWorkspace.restore')();assert.equal(f.settings.get(key),false);
+});
+test('same-version appearance migration respects edits and runs only once',async t=>{
+ const key='workbench.experimental.modernUI';
+ const f=await fixture(t,{enabled:true,modernUI:true,state:{appearanceVersion:'0.5.0',settingsJournal:{}},settings:{'editor.fontSize':19}});
+ assert.equal(f.settings.get(key),true);assert.equal(f.settings.get('editor.fontSize'),19);
+ f.settings.set(key,false);
+ const again=await fixture(t,{enabled:true,modernUI:true,settings:Object.fromEntries(f.settings),state:Object.fromEntries(f.state)});
+ assert.equal(again.settings.get(key),false);
+});
+
+test('compact layout menu is owned only while navigation is enabled and preserves later edits',async t=>{
+ for(const exit of ['disable','restore','userEdit']){
+  const f=await fixture(t,{settings:{'workbench.layoutControl.type':'toggles'}});
+  await f.commands.get('ideaWorkspace.apply')();
+  assert.equal(f.settings.get('workbench.layoutControl.type'),'both');
+  if(exit==='userEdit')f.settings.set('workbench.layoutControl.type','menu');
+  if(exit==='disable'){
+   const shown=f.status.shown;f.changeConfig('ideaWorkspace.navigation.enabled',false);
+   for(let i=0;i<60&&f.status.shown===shown;i++)await new Promise(r=>setTimeout(r,20));
+   assert.ok(f.status.shown>shown);
+  }else await f.commands.get('ideaWorkspace.restore')();
+  assert.equal(f.settings.get('workbench.layoutControl.type'),exit==='userEdit'?'menu':'toggles');
+ }
+});
+
+
+test('custom native controls setting is feature-detected and restored without overwriting later edits',async t=>{
+ for(const supported of [false,true]){
+  const f=await fixture(t,{controlsStyle:supported,settings:{'window.controlsStyle':'native'}});
+  await f.commands.get('ideaWorkspace.apply')();
+  assert.equal(f.settings.get('window.controlsStyle'),supported&&process.platform!=='darwin'?'custom':'native');
+  await f.commands.get('ideaWorkspace.restore')();assert.equal(f.settings.get('window.controlsStyle'),'native');
+ }
+ const edited=await fixture(t,{controlsStyle:true});await edited.commands.get('ideaWorkspace.apply')();
+ edited.settings.set('window.controlsStyle','hidden');await edited.commands.get('ideaWorkspace.restore')();
+ assert.equal(edited.settings.get('window.controlsStyle'),'hidden');
 });

@@ -1,8 +1,15 @@
 # Changelog
 
-## Unreleased
+## 0.7.0
 
+- Distinguish common source, Java layer, configuration, security, resource, database, documentation, test and build folders with centered colored symbols inside larger neutral outlines. Use one simplified purple robot for Agent/Codex/Claude folders, with open/closed variants and dedicated light-theme colors.
+- Recover automatic Linux UI setup when VS Code runs with NoNewPrivs by requesting PolicyKit authentication through a bounded transient user-session task. Keep direct authentication for normal sessions, distinguish cancellation from unavailable/timeout errors, and retry an older failed authorization once after this update.
 - Add compact native menus on Windows/Linux, coordinated sidebar/menu/Quick Input styling, and a status bar project switcher backed by Open Recent.
+- Keep a compact centered native Command Center with magnifier and workspace name, opening full-size native search on click or double Shift without moving neighboring icons. Hide navigation history controls and show the title-bar logo without a wordmark.
+- Keep Customize Layout as the single layout control and show all three supported native custom window controls with borderless transparent styling and theme-aware hover/focus colors, including red for Close. Restore journaled layout/control preferences without overwriting later edits.
+- Add a continuous jade gradient frame with borderless rounded native cards and visible gutters; preserve the layout and selected palette when switching to external themes.
+- Update IDEA-inspired Dark surfaces and add optional IDEA-inspired Light with its own syntax, semantic and terminal palettes. Setup and Apply preserve the selected color theme.
+- Add a native right tool rail on recognized workbench builds, using the actual icons and views of visible Secondary Side Bar containers. Preserve original workbench JavaScript, use owned runtime copies, and restore the original startup on request; unsupported builds keep the native toolbar.
 - Bind double Shift to native Quick Open outside the terminal; keep native file, symbol and command search modes.
 - Add a navigation preference and journal layout changes so disabling navigation or Restore preserves later user edits and restores owned settings.
 - Preserve original font asset and license bytes across Git checkouts to prevent Windows line-ending conversion from breaking bundled-font integrity checks.

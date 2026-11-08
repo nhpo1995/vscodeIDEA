@@ -3,7 +3,7 @@ import * as path from 'node:path';
 import {createHash,randomUUID} from 'node:crypto';
 
 /** Generate reviewable, self-contained scripts. Never starts a process or elevates. */
-export async function prepareAdminScripts(target:string,storage:string,css:string,version:string,operation:'apply'|'restore'='apply',renderer?:string):Promise<{apply:string;restore:string}>{
+export async function prepareAdminScripts(target:string,storage:string,css:string,version:string,operation:'apply'|'restore'='apply',renderer?:string,rail?:string):Promise<{apply:string;restore:string}>{
  const current=await fs.readFile(target);
  const expected=createHash('sha256').update(current).digest('hex');
  const source=await fs.readFile(require.resolve('./patcher'),'utf8');
@@ -21,7 +21,7 @@ export async function prepareAdminScripts(target:string,storage:string,css:strin
  if(stat.isSymbolicLink() || !stat.isFile())throw Error('Refusing symlink or non-file target.');
  ${action==='apply'?`const current=await fs.readFile(target);
  if(crypto.createHash('sha256').update(current).digest('hex')!==${JSON.stringify(expected)})throw Error('Workbench changed since preparation. Run Apply in VS Code to prepare fresh scripts.');
- await exports.applyPatch(target,${JSON.stringify(backup)},${JSON.stringify(css)},${JSON.stringify(version)},${JSON.stringify(renderer)});`:'await exports.restorePatch(target);'}
+ await exports.applyPatch(target,${JSON.stringify(backup)},${JSON.stringify(css)},${JSON.stringify(version)},${JSON.stringify(renderer)},${JSON.stringify(rail)});`:'await exports.restorePatch(target);'}
  console.log(${JSON.stringify(action==='apply'?'Owned CSS applied. Reload the VS Code window to load the changes.':'Owned CSS removed. Reload the VS Code window to load the changes.')});
 })().catch(error=>{console.error(error.message);process.exitCode=1;});
 `;

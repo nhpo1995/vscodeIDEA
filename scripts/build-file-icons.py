@@ -16,15 +16,52 @@ def svg(name,body,color=GRAY):
 def sheet(body='',color=GRAY):
     return '<path d="M3 1.5h6l4 4v9H3zM9 1.5v4h4"/>'+body
 
-def folder(name,color=GRAY,opened=False):
-    body='<path d="M1.5 4.5h4.8L8 6h6.5v7.5h-13z"/>'
-    if opened:body='<path d="M1.5 11V4.5h4.8L8 6h6.5v2"/><path d="M3 7.5h12l-2 6H1z"/>'
-    svg(name,body,color)
-folder('folder');folder('folder-open',opened=True)
-folder('source-folder',BLUE);folder('source-folder-open',BLUE,True)
-folder('resource-folder',YELLOW);folder('resource-folder-open',YELLOW,True)
-folder('build-folder',ORANGE);folder('build-folder-open',ORANGE,True)
-folder('config-folder',GRAY);folder('config-folder-open',GRAY,True)
+# Centered semantic marks; paired folder silhouettes preserve meaning when expanded.
+FOLDER_MARKS = {
+    'source': '<path d="m6 8-2 2 2 2m4-4 2 2-2 2"/>',
+    'controller': '<path d="M8 7v3M4.5 10h7M4.5 10v2M11.5 10v2"/><circle cx="8" cy="7" r=".7"/>',
+    'service': '<path d="M8 7v1m0 4v1m-3-3H4m8 0h-1M6 8 5 7m5 1 1-1m-5 5-1 1m5-1 1 1"/><circle cx="8" cy="10" r="2"/>',
+    'repository': '<path d="m4 8 4-1.5L12 8l-4 1.5zm0 2 4 1.5 4-1.5M4 12l4 1.5 4-1.5"/>',
+    'entity': '<path d="m5 8 3-1.5L11 8v4l-3 1.5L5 12zm0 0 3 1.5L11 8m-3 1.5v4"/>',
+    'dto': '<rect x="4" y="7" width="4" height="4" rx=".5"/><rect x="8" y="10" width="4" height="3" rx=".5"/>',
+    'mapper': '<path d="M4 8h8m-2-2 2 2-2 2M12 12H4m2-2-2 2 2 2"/>',
+    'config': '<path d="M4 8h8M4 12h8"/><circle cx="6" cy="8" r="1"/><circle cx="10" cy="12" r="1"/>',
+    'security': '<path d="M8 6.5 11 8v2c0 2-3 3.5-3 3.5S5 12 5 10V8z"/><path d="m6.5 10 1 1 2-2"/>',
+    'resources': '<path d="m4 8 2 2 2-2 2 2 2-2M4 12h8"/>',
+    'database': '<ellipse cx="8" cy="8" rx="3.5" ry="1.2"/><path d="M4.5 8v4c0 1.6 7 1.6 7 0V8m-7 2c0 1.6 7 1.6 7 0"/>',
+    'docs': '<path d="M5.5 6.5h5v7h-5zM7 9h2M7 11h2"/>',
+    'test': '<path d="M6 6.5h4M7 6.5v3l-2.5 4h7L9 9.5v-3M6 11h4"/>',
+    'build': '<path d="m4.5 8 3.5-1.5L11.5 8v4.5L8 14l-3.5-1.5zm0 0L8 9.5 11.5 8M8 9.5V14"/>',
+    'robot': '<path d="M8 6.5v1"/><rect x="4.5" y="7.5" width="7" height="5.5" rx="1"/><path d="M6.5 11.5h3"/><circle cx="6.5" cy="9.5" r=".5"/><circle cx="9.5" cy="9.5" r=".5"/>',
+}
+FOLDER_PALETTES = {
+    'dark': {'gray':'#A6B0BF','blue':'#79A7F2','cyan':'#72C8D5','purple':'#BE9AE5','teal':'#62C6AD','orange':'#DFA17D','yellow':'#D8BD77','green':'#91BE82'},
+    'light': {'gray':'#596B80','blue':'#356ABA','cyan':'#24758A','purple':'#8350AD','teal':'#247C69','orange':'#A45C30','yellow':'#8A6B19','green':'#467937'},
+}
+FOLDER_STYLES = {
+    'folder': ('', 'gray'), 'source-folder': ('source','blue'),
+    'controller-folder': ('controller','cyan'), 'service-folder': ('service','purple'),
+    'repository-folder': ('repository','teal'), 'entity-folder': ('entity','orange'),
+    'dto-folder': ('dto','cyan'), 'mapper-folder': ('mapper','purple'),
+    'config-folder': ('config','gray'), 'security-folder': ('security','yellow'),
+    'resource-folder': ('resources','yellow'), 'database-folder': ('database','teal'),
+    'docs-folder': ('docs','blue'), 'ai-folder': ('robot','purple'),
+    'test-folder': ('test','green'), 'build-folder': ('build','orange'),
+}
+for name, (mark, color_key) in FOLDER_STYLES.items():
+    for mode, palette in FOLDER_PALETTES.items():
+        for opened in (False, True):
+            # Larger neutral frame within the native 16px slot; no row scaling.
+            body = '<path d="M.75 3h5L7.5 4.75h7.75V15H.75z"/>'
+            if opened:
+                body = '<path d="M.75 11V3h5L7.5 4.75h7.75M2.25 5.5h13L13.75 15h-13z"/>'
+            # Separate neutral silhouette and colored mark; inset leaves a gap
+            # from both silhouettes without painting a theme-specific background.
+            symbol = FOLDER_MARKS.get(mark, '')
+            if symbol:
+                body += f'<g stroke="{palette[color_key]}" transform="translate(.8 .8) scale(.9)">{symbol}</g>'
+            suffix = ('-open' if opened else '') + ('-light' if mode == 'light' else '')
+            svg(name + suffix, body, palette['gray'])
 svg('root-folder','<path d="M1.5 4.5h4.8L8 6h6.5v7.5h-13z"/><rect x="10.5" y="10" width="4" height="4" fill="#25364C" stroke="'+BLUE+'"/>')
 svg('file',sheet('<path d="M5.5 9h5M5.5 11h4"/>'))
 svg('java','<circle cx="8" cy="8" r="6" fill="#25364C"/><path d="M10.5 5.5a3.3 3.3 0 1 0 0 5" stroke-width="1.2"/>',BLUE)
@@ -64,7 +101,31 @@ mapping={
  'png':'image','jpg':'image','jpeg':'image','gif':'image','webp':'image','svg':'image','ico':'image',
  'zip':'archive','gz':'archive','tar':'archive','7z':'archive','pdf':'pdf','gradle':'gradle','env':'env'}
 filenames={'pom.xml':'maven','build.gradle':'gradle','settings.gradle':'gradle','build.gradle.kts':'gradle','settings.gradle.kts':'gradle','gradlew':'gradle','gradlew.bat':'gradle','mvnw':'maven','mvnw.cmd':'maven','package.json':'javascript','package-lock.json':'javascript','tsconfig.json':'typescript','jsconfig.json':'javascript','Dockerfile':'docker','docker-compose.yml':'docker','docker-compose.yaml':'docker','compose.yml':'docker','compose.yaml':'docker','.dockerignore':'docker','.gitignore':'git','.gitattributes':'git','.gitmodules':'git','.gitkeep':'git','.env':'env','.env.local':'env','.env.example':'env','package-info.java':'package','module-info.java':'package','README.md':'markdown','LICENSE':'file'}
-folders={'src':'source-folder','main':'source-folder','java':'source-folder','kotlin':'source-folder','test':'source-folder','tests':'source-folder','resources':'resource-folder','public':'resource-folder','assets':'resource-folder','target':'build-folder','build':'build-folder','dist':'build-folder','.git':'config-folder','.vscode':'config-folder','.idea':'config-folder','.mvn':'config-folder','.gradle':'config-folder'}
+# Exact, case-insensitive native folder associations; no wildcard scanning.
+FOLDER_GROUPS = {
+    'source-folder': 'src source sources main java kotlin',
+    'controller-folder': 'controller controllers rest api',
+    'service-folder': 'service services',
+    'repository-folder': 'repository repositories',
+    'entity-folder': 'entity entities model models domain enty',
+    'dto-folder': 'dto dtos',
+    'mapper-folder': 'mapper mappers mapping mappings',
+    'config-folder': 'config configs configuration configurations .git .vscode .idea .mvn .gradle .openidea',
+    'security-folder': 'security sercurity auth authentication authorization',
+    'resource-folder': 'resource resources assets public static',
+    'database-folder': 'data database databases db mysql_data mysql-data redis_data redis-data mysql redis migrations migration seed seeds',
+    'docs-folder': 'doc docs document documents documentation',
+    'ai-folder': 'agent agents .agent .agents codex .codex claude .claude ai .ai',
+    'test-folder': 'test tests __tests__',
+    'build-folder': 'target build dist out',
+}
+folders = {name: icon for icon, names in FOLDER_GROUPS.items() for name in names.split()}
 theme={'iconDefinitions':icons,'file':'file','folder':'folder','folderExpanded':'folder-open','rootFolder':'root-folder','rootFolderExpanded':'folder-open','folderNames':folders,'folderNamesExpanded':{name:icon+'-open' for name,icon in folders.items()},'fileExtensions':mapping,'fileNames':filenames,'languageIds':{'java':'java','kotlin':'kotlin','typescript':'typescript','javascript':'javascript','typescriptreact':'react','javascriptreact':'react','json':'json','jsonc':'json','xml':'xml','html':'html','css':'css','scss':'css','less':'css','markdown':'markdown','sql':'database','yaml':'yaml','properties':'properties','shellscript':'shell','dockerfile':'docker','gitignore':'git'}}
+theme['light'] = {
+    'folder': 'folder-light', 'folderExpanded': 'folder-open-light',
+    'rootFolderExpanded': 'folder-open-light',
+    'folderNames': {name: icon + '-light' for name, icon in folders.items()},
+    'folderNamesExpanded': {name: icon + '-open-light' for name, icon in folders.items()},
+}
 (ROOT/'themes'/'file-icons.json').write_text(json.dumps(theme,indent=2)+'\n')
 print('Built',len(icons),'file/folder icons;',len(mapping),'extensions and',len(filenames),'filenames')

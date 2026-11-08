@@ -2,12 +2,11 @@ import * as vscode from 'vscode';
 import * as path from 'node:path';
 import * as fs from 'node:fs/promises';
 import {constants} from 'node:fs';
-import {execFile} from 'node:child_process';
-import {promisify} from 'node:util';
-import {applyPatch,restorePatch,findWorkbench,logoDataUri,renderCss,rendererAssetValid} from './patcher';
+import {authorizeLinux,authorizationRevision} from './authorization';
+import {applyPatch,restorePatch,findWorkbench,logoDataUri,renderCss,rendererAssetValid,nativeRailSupported,nativeRailAssetsValid} from './patcher';
 import {applySettings,applyPalette,restoreSettings,SettingsHost,Journal,ApplyMode} from './settings';
 import {prepareAdminScripts} from './admin';
-import {preset,navigationPreset} from './preset';
+import {preset,navigationPreset,surfacePreset} from './preset';
 import {registerConstantHighlighting} from './highlighting';
 import {inspectChrome,shouldAutoApply,needsReload,ChromeAttempt,PendingReload} from './chrome';
 import {ensureFontInstalled} from './fonts';
@@ -23,8 +22,10 @@ export async function activate(context:vscode.ExtensionContext):Promise<void>{
  });context.subscriptions.push(navigation,menu);
  const setNavigation=async(enabled:boolean)=>{menu.setEnabled(enabled);await navigation.setEnabled(enabled);};
  const navigationEnabled=()=>!context.globalState.get<boolean>('autoUiDisabled') && vscode.workspace.getConfiguration('ideaWorkspace').get<boolean>('navigation.enabled',true);
- const layoutSettings=vscode.env.uiKind===vscode.UIKind.Desktop?navigationPreset(process.platform):{};
+ const layoutSettings=vscode.env.uiKind===vscode.UIKind.Desktop?navigationPreset(process.platform,typeof vscode.workspace.getConfiguration().inspect('window.controlsStyle')?.defaultValue==='string'):{};
  const version=context.extension.packageJSON.version as string;
+ const appearanceRevision='theme-surfaces-1';
+ const surfaceSettings=vscode.env.uiKind===vscode.UIKind.Desktop?surfacePreset(typeof vscode.workspace.getConfiguration().inspect('workbench.experimental.modernUI')?.defaultValue==='boolean'):{};
  const host:SettingsHost={
   read:key=>vscode.workspace.getConfiguration().inspect(key)?.globalValue,
   write:async(key,value)=>{await vscode.workspace.getConfiguration().update(key,value,vscode.ConfigurationTarget.Global);},
@@ -53,9 +54,12 @@ export async function activate(context:vscode.ExtensionContext):Promise<void>{
   const installed=await readWorkbench();let style='',desiredError:string|undefined;
   try{style=await css();}catch(error){desiredError=error instanceof Error?error.message:String(error);}
   const renderer=navigationEnabled() && vscode.env.uiKind===vscode.UIKind.Desktop && ['win32','linux'].includes(process.platform)?await fs.readFile(context.asAbsolutePath('dist/menuRenderer.js'),'utf8'):undefined;
-  const snapshot=inspectChrome(installed.html,style,installed.target,vscode.version,renderer);
+  const railCandidate=navigationEnabled() && vscode.env.uiKind===vscode.UIKind.Desktop?await fs.readFile(context.asAbsolutePath('dist/nativeRailRenderer.js'),'utf8'):undefined;
+  const rail=railCandidate && await nativeRailSupported(installed.target,railCandidate)?railCandidate:undefined;
+  const snapshot=inspectChrome(installed.html,style,installed.target,vscode.version,renderer,rail);
+  if(rail && snapshot.state==='current' && !await nativeRailAssetsValid(installed.target,rail))snapshot.state='outdated';
   if(renderer && snapshot.state==='current' && !await rendererAssetValid(installed.target,renderer))snapshot.state='outdated';
-  return {...installed,style,renderer,desiredError,snapshot};
+  return {...installed,style,renderer,rail,desiredError,snapshot};
  };
  const readChrome=async()=>{
   const state=await readChromeStatus();if(state.desiredError)throw Error(state.desiredError);return state;
@@ -113,24 +117,25 @@ export async function activate(context:vscode.ExtensionContext):Promise<void>{
  };
  const appearance=async(mode:ApplyMode)=>{
   await prepareFonts();
-  const desired={...preset,...(navigationEnabled()?layoutSettings:{})};
-  await restoreSettings(host,key=>!Object.hasOwn(desired,key) && !key.startsWith('@idea-palette:'));
+  const desired={...preset,...surfaceSettings,...(navigationEnabled()?layoutSettings:{})};
+  await restoreSettings(host,key=>!Object.hasOwn(desired,key) && key!=='workbench.colorTheme' && !key.startsWith('@idea-palette:'));
   const kept=await applySettings(host,desired,mode);
   const theme=JSON.parse(await fs.readFile(context.asAbsolutePath('themes/idea-dark.json'),'utf8'));
   kept.push(...await applyPalette(host,theme.colors,mode));
   if(kept.length)output.appendLine('Kept user customizations on upgrade: '+kept.join(', '));
  };
  const permissionError=(error:unknown)=>['EACCES','EPERM','EROFS'].includes((error as NodeJS.ErrnoException).code??'');
- const elevate=async(target:string,style:string,operation:'apply'|'restore',renderer?:string)=>{
+ const elevate=async(target:string,style:string,operation:'apply'|'restore',renderer?:string,rail?:string)=>{
   if(process.platform!=='linux')throw Error('API appearance is independent. Automatic administrator authentication for custom chrome is supported on Linux only.');
-  const scripts=await prepareAdminScripts(target,context.globalStorageUri.fsPath,style,vscode.version,operation,renderer);
+  const scripts=await prepareAdminScripts(target,context.globalStorageUri.fsPath,style,vscode.version,operation,renderer,rail);
   output.appendLine(`Requesting OS authorization to ${operation} owned CSS in ${target}. Installation permissions are unchanged.`);
   try{
-   const result=await promisify(execFile)('/usr/bin/pkexec',['/usr/bin/env','ELECTRON_RUN_AS_NODE=1',process.execPath,scripts[operation]],{timeout:120000,maxBuffer:1024*1024});
+   const result=await authorizeLinux(process.execPath,scripts[operation]);
+   output.appendLine('OS authorization backend: '+result.backend);
    output.appendLine(result.stdout);
   }catch(error){
    output.appendLine(String(error));
-   throw Error(`${operation==='apply'?'Custom chrome installation':'Restore'} did not complete. Authorization was cancelled or unavailable. Retry ${operation==='apply'?'Apply UI and Logo':'Restore UI and Settings'} from Setup.`);
+   throw error;
   }
  };
  const requestReload=guarded(async()=>{
@@ -145,26 +150,26 @@ export async function activate(context:vscode.ExtensionContext):Promise<void>{
   const state=await readChrome();
   if(state.snapshot.state==='damaged')throw Error('Custom UI markers are damaged. Automatic modification is blocked. Open diagnostics.');
   if(state.snapshot.state==='current')return false;
-  await context.globalState.update('chromeAttempt',{fingerprint:state.snapshot.fingerprint,outcome:'attempting'} satisfies ChromeAttempt);
+  await context.globalState.update('chromeAttempt',{fingerprint:state.snapshot.fingerprint,outcome:'attempting',authorizationRevision} satisfies ChromeAttempt);
   try{
    let changed:boolean;
-   try{changed=await applyPatch(state.target,path.join(context.globalStorageUri.fsPath,'backups'),state.style,vscode.version,state.renderer);}
-   catch(error){if(!permissionError(error))throw error;await elevate(state.target,state.style,'apply',state.renderer);changed=true;}
+   try{changed=await applyPatch(state.target,path.join(context.globalStorageUri.fsPath,'backups'),state.style,vscode.version,state.renderer,state.rail);}
+   catch(error){if(!permissionError(error))throw error;await elevate(state.target,state.style,'apply',state.renderer,state.rail);changed=true;}
    const after=await readChrome();
    if(after.snapshot.state!=='current')throw Error('CSS verification after installation failed. Open diagnostics.');
-   await context.globalState.update('chromeAttempt',{fingerprint:after.snapshot.fingerprint,outcome:'applied'} satisfies ChromeAttempt);
+   await context.globalState.update('chromeAttempt',{fingerprint:after.snapshot.fingerprint,outcome:'applied',authorizationRevision} satisfies ChromeAttempt);
    await context.globalState.update('customUiRequested',true);
    if(changed)await context.globalState.update('pendingReload',{cssHash:after.snapshot.cssHash,session:vscode.env.sessionId,action:'apply'} satisfies PendingReload);
    return changed;
   }catch(error){
-   await context.globalState.update('chromeAttempt',{fingerprint:state.snapshot.fingerprint,outcome:'failed',error:error instanceof Error?error.message:String(error)} satisfies ChromeAttempt);
+   await context.globalState.update('chromeAttempt',{fingerprint:state.snapshot.fingerprint,outcome:'failed',authorizationRevision,error:error instanceof Error?error.message:String(error)} satisfies ChromeAttempt);
    throw error;
   }
  };
  const apply=guarded(async()=>{
   await context.globalState.update('autoUiDisabled',false);
   fontSetup=undefined;
-  await appearance('explicit');await context.globalState.update('appearanceVersion',version);
+  await appearance('explicit');await context.globalState.update('appearanceVersion',version);await context.globalState.update('appearanceRevision',appearanceRevision);
   await context.globalState.update('navigationLayoutEnabled',navigationEnabled());
   await setNavigation(navigationEnabled());
   if(await patch())reloadNotice('Custom CSS installed on disk.');
@@ -198,6 +203,7 @@ export async function activate(context:vscode.ExtensionContext):Promise<void>{
   const state=await readChromeStatus();let writable=true;
   try{await fs.access(path.dirname(state.target),constants.W_OK);await fs.access(state.target,constants.W_OK);}catch{writable=false;}
   output.clear();output.appendLine(`VS Code ${vscode.version}; ${process.platform}\nWorkbench: ${state.target}\nWritable: ${writable}\nDesired CSS: ${state.desiredError??state.snapshot.state}\nFingerprint: ${state.snapshot.fingerprint}`);
+  output.appendLine('Native tool rail: '+(state.rail?'recognized desktop layout; assets verified on disk':navigationEnabled()?'unavailable for this native layout; original toolbar retained':'disabled'));
   output.appendLine('Last attempt: '+JSON.stringify(context.globalState.get('chromeAttempt')));
   output.appendLine('Pending reload: '+JSON.stringify(context.globalState.get('pendingReload')));
   output.appendLine('Font setup: '+JSON.stringify(context.globalState.get('fontStatus')));
@@ -239,9 +245,9 @@ export async function activate(context:vscode.ExtensionContext):Promise<void>{
   const disabled=context.globalState.get<boolean>('autoUiDisabled');
   await setNavigation(navigationEnabled());
   if(!disabled)await prepareFonts();
-  if(!disabled && context.globalState.get<string>('appearanceVersion')!==version){
+  if(!disabled && (context.globalState.get<string>('appearanceVersion')!==version || context.globalState.get<string>('appearanceRevision')!==appearanceRevision)){
    const upgrade=!!context.globalState.get('appearanceVersion') || !!host.load();
-   await appearance(upgrade?'upgrade':'explicit');await context.globalState.update('appearanceVersion',version);
+   await appearance(upgrade?'upgrade':'explicit');await context.globalState.update('appearanceVersion',version);await context.globalState.update('appearanceRevision',appearanceRevision);
   }
   if(!disabled)await updateNavigation(context.globalState.get<boolean>('navigationLayoutEnabled')===false?'explicit':'upgrade');
   if(vscode.env.uiKind!==vscode.UIKind.Desktop)return;
@@ -249,10 +255,10 @@ export async function activate(context:vscode.ExtensionContext):Promise<void>{
   if(pending && (!pendingMatches(pending,state) || !needsReload(pending,pending.cssHash,vscode.env.sessionId)))await context.globalState.update('pendingReload',undefined);
   if(disabled)return;
   if(state.desiredError)throw Error(state.desiredError);
-  if(shouldAutoApply(state.snapshot,context.globalState.get<ChromeAttempt>('chromeAttempt'))){
+  if(shouldAutoApply(state.snapshot,context.globalState.get<ChromeAttempt>('chromeAttempt'),authorizationRevision)){
    if(await patch())reloadNotice('Custom CSS installed or recovered on disk.');
   }else if(state.snapshot.state==='current'){
-   await context.globalState.update('chromeAttempt',{fingerprint:state.snapshot.fingerprint,outcome:'applied'} satisfies ChromeAttempt);
+    await context.globalState.update('chromeAttempt',{fingerprint:state.snapshot.fingerprint,outcome:'applied',authorizationRevision} satisfies ChromeAttempt);
   }
  })();
 }

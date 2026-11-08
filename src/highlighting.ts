@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import {constantRanges} from './constants';
-import {THEME} from './preset';
+import {isBundledTheme} from './preset';
 import {SemanticCache} from './semantic-cache';
 
 /** Read existing semantic tokens; do not register or replace any Java provider. */
@@ -13,7 +13,7 @@ export function registerConstantHighlighting():vscode.Disposable{
  const pending=new Set<string>();
  let disposed=false;
  const enabled=(document:vscode.TextDocument)=>document.languageId==='java' &&
-  vscode.workspace.getConfiguration().get('workbench.colorTheme')===THEME &&
+  isBundledTheme(vscode.workspace.getConfiguration().get('workbench.colorTheme')) &&
   vscode.workspace.getConfiguration('editor',document).get('semanticHighlighting.enabled')!==false &&
   vscode.workspace.getConfiguration('java',document).get('semanticHighlighting.enabled')!==false;
  const refresh=async(editor:vscode.TextEditor)=>{

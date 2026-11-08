@@ -6,11 +6,119 @@
     "folder-open": {
       "iconPath": "../media/files/folder-open.svg"
     },
+    "folder-light": {
+      "iconPath": "../media/files/folder-light.svg"
+    },
+    "folder-open-light": {
+      "iconPath": "../media/files/folder-open-light.svg"
+    },
     "source-folder": {
       "iconPath": "../media/files/source-folder.svg"
     },
     "source-folder-open": {
       "iconPath": "../media/files/source-folder-open.svg"
+    },
+    "source-folder-light": {
+      "iconPath": "../media/files/source-folder-light.svg"
+    },
+    "source-folder-open-light": {
+      "iconPath": "../media/files/source-folder-open-light.svg"
+    },
+    "controller-folder": {
+      "iconPath": "../media/files/controller-folder.svg"
+    },
+    "controller-folder-open": {
+      "iconPath": "../media/files/controller-folder-open.svg"
+    },
+    "controller-folder-light": {
+      "iconPath": "../media/files/controller-folder-light.svg"
+    },
+    "controller-folder-open-light": {
+      "iconPath": "../media/files/controller-folder-open-light.svg"
+    },
+    "service-folder": {
+      "iconPath": "../media/files/service-folder.svg"
+    },
+    "service-folder-open": {
+      "iconPath": "../media/files/service-folder-open.svg"
+    },
+    "service-folder-light": {
+      "iconPath": "../media/files/service-folder-light.svg"
+    },
+    "service-folder-open-light": {
+      "iconPath": "../media/files/service-folder-open-light.svg"
+    },
+    "repository-folder": {
+      "iconPath": "../media/files/repository-folder.svg"
+    },
+    "repository-folder-open": {
+      "iconPath": "../media/files/repository-folder-open.svg"
+    },
+    "repository-folder-light": {
+      "iconPath": "../media/files/repository-folder-light.svg"
+    },
+    "repository-folder-open-light": {
+      "iconPath": "../media/files/repository-folder-open-light.svg"
+    },
+    "entity-folder": {
+      "iconPath": "../media/files/entity-folder.svg"
+    },
+    "entity-folder-open": {
+      "iconPath": "../media/files/entity-folder-open.svg"
+    },
+    "entity-folder-light": {
+      "iconPath": "../media/files/entity-folder-light.svg"
+    },
+    "entity-folder-open-light": {
+      "iconPath": "../media/files/entity-folder-open-light.svg"
+    },
+    "dto-folder": {
+      "iconPath": "../media/files/dto-folder.svg"
+    },
+    "dto-folder-open": {
+      "iconPath": "../media/files/dto-folder-open.svg"
+    },
+    "dto-folder-light": {
+      "iconPath": "../media/files/dto-folder-light.svg"
+    },
+    "dto-folder-open-light": {
+      "iconPath": "../media/files/dto-folder-open-light.svg"
+    },
+    "mapper-folder": {
+      "iconPath": "../media/files/mapper-folder.svg"
+    },
+    "mapper-folder-open": {
+      "iconPath": "../media/files/mapper-folder-open.svg"
+    },
+    "mapper-folder-light": {
+      "iconPath": "../media/files/mapper-folder-light.svg"
+    },
+    "mapper-folder-open-light": {
+      "iconPath": "../media/files/mapper-folder-open-light.svg"
+    },
+    "config-folder": {
+      "iconPath": "../media/files/config-folder.svg"
+    },
+    "config-folder-open": {
+      "iconPath": "../media/files/config-folder-open.svg"
+    },
+    "config-folder-light": {
+      "iconPath": "../media/files/config-folder-light.svg"
+    },
+    "config-folder-open-light": {
+      "iconPath": "../media/files/config-folder-open-light.svg"
+    },
+    "security-folder": {
+      "iconPath": "../media/files/security-folder.svg"
+    },
+    "security-folder-open": {
+      "iconPath": "../media/files/security-folder-open.svg"
+    },
+    "security-folder-light": {
+      "iconPath": "../media/files/security-folder-light.svg"
+    },
+    "security-folder-open-light": {
+      "iconPath": "../media/files/security-folder-open-light.svg"
     },
     "resource-folder": {
       "iconPath": "../media/files/resource-folder.svg"
@@ -18,17 +126,71 @@
     "resource-folder-open": {
       "iconPath": "../media/files/resource-folder-open.svg"
     },
+    "resource-folder-light": {
+      "iconPath": "../media/files/resource-folder-light.svg"
+    },
+    "resource-folder-open-light": {
+      "iconPath": "../media/files/resource-folder-open-light.svg"
+    },
+    "database-folder": {
+      "iconPath": "../media/files/database-folder.svg"
+    },
+    "database-folder-open": {
+      "iconPath": "../media/files/database-folder-open.svg"
+    },
+    "database-folder-light": {
+      "iconPath": "../media/files/database-folder-light.svg"
+    },
+    "database-folder-open-light": {
+      "iconPath": "../media/files/database-folder-open-light.svg"
+    },
+    "docs-folder": {
+      "iconPath": "../media/files/docs-folder.svg"
+    },
+    "docs-folder-open": {
+      "iconPath": "../media/files/docs-folder-open.svg"
+    },
+    "docs-folder-light": {
+      "iconPath": "../media/files/docs-folder-light.svg"
+    },
+    "docs-folder-open-light": {
+      "iconPath": "../media/files/docs-folder-open-light.svg"
+    },
+    "ai-folder": {
+      "iconPath": "../media/files/ai-folder.svg"
+    },
+    "ai-folder-open": {
+      "iconPath": "../media/files/ai-folder-open.svg"
+    },
+    "ai-folder-light": {
+      "iconPath": "../media/files/ai-folder-light.svg"
+    },
+    "ai-folder-open-light": {
+      "iconPath": "../media/files/ai-folder-open-light.svg"
+    },
+    "test-folder": {
+      "iconPath": "../media/files/test-folder.svg"
+    },
+    "test-folder-open": {
+      "iconPath": "../media/files/test-folder-open.svg"
+    },
+    "test-folder-light": {
+      "iconPath": "../media/files/test-folder-light.svg"
+    },
+    "test-folder-open-light": {
+      "iconPath": "../media/files/test-folder-open-light.svg"
+    },
     "build-folder": {
       "iconPath": "../media/files/build-folder.svg"
     },
     "build-folder-open": {
       "iconPath": "../media/files/build-folder-open.svg"
     },
-    "config-folder": {
-      "iconPath": "../media/files/config-folder.svg"
+    "build-folder-light": {
+      "iconPath": "../media/files/build-folder-light.svg"
     },
-    "config-folder-open": {
-      "iconPath": "../media/files/config-folder-open.svg"
+    "build-folder-open-light": {
+      "iconPath": "../media/files/build-folder-open-light.svg"
     },
     "root-folder": {
       "iconPath": "../media/files/root-folder.svg"
@@ -122,41 +284,171 @@
   "rootFolderExpanded": "folder-open",
   "folderNames": {
     "src": "source-folder",
+    "source": "source-folder",
+    "sources": "source-folder",
     "main": "source-folder",
     "java": "source-folder",
     "kotlin": "source-folder",
-    "test": "source-folder",
-    "tests": "source-folder",
-    "resources": "resource-folder",
-    "public": "resource-folder",
-    "assets": "resource-folder",
-    "target": "build-folder",
-    "build": "build-folder",
-    "dist": "build-folder",
+    "controller": "controller-folder",
+    "controllers": "controller-folder",
+    "rest": "controller-folder",
+    "api": "controller-folder",
+    "service": "service-folder",
+    "services": "service-folder",
+    "repository": "repository-folder",
+    "repositories": "repository-folder",
+    "entity": "entity-folder",
+    "entities": "entity-folder",
+    "model": "entity-folder",
+    "models": "entity-folder",
+    "domain": "entity-folder",
+    "enty": "entity-folder",
+    "dto": "dto-folder",
+    "dtos": "dto-folder",
+    "mapper": "mapper-folder",
+    "mappers": "mapper-folder",
+    "mapping": "mapper-folder",
+    "mappings": "mapper-folder",
+    "config": "config-folder",
+    "configs": "config-folder",
+    "configuration": "config-folder",
+    "configurations": "config-folder",
     ".git": "config-folder",
     ".vscode": "config-folder",
     ".idea": "config-folder",
     ".mvn": "config-folder",
-    ".gradle": "config-folder"
+    ".gradle": "config-folder",
+    ".openidea": "config-folder",
+    "security": "security-folder",
+    "sercurity": "security-folder",
+    "auth": "security-folder",
+    "authentication": "security-folder",
+    "authorization": "security-folder",
+    "resource": "resource-folder",
+    "resources": "resource-folder",
+    "assets": "resource-folder",
+    "public": "resource-folder",
+    "static": "resource-folder",
+    "data": "database-folder",
+    "database": "database-folder",
+    "databases": "database-folder",
+    "db": "database-folder",
+    "mysql_data": "database-folder",
+    "mysql-data": "database-folder",
+    "redis_data": "database-folder",
+    "redis-data": "database-folder",
+    "mysql": "database-folder",
+    "redis": "database-folder",
+    "migrations": "database-folder",
+    "migration": "database-folder",
+    "seed": "database-folder",
+    "seeds": "database-folder",
+    "doc": "docs-folder",
+    "docs": "docs-folder",
+    "document": "docs-folder",
+    "documents": "docs-folder",
+    "documentation": "docs-folder",
+    "agent": "ai-folder",
+    "agents": "ai-folder",
+    ".agent": "ai-folder",
+    ".agents": "ai-folder",
+    "codex": "ai-folder",
+    ".codex": "ai-folder",
+    "claude": "ai-folder",
+    ".claude": "ai-folder",
+    "ai": "ai-folder",
+    ".ai": "ai-folder",
+    "test": "test-folder",
+    "tests": "test-folder",
+    "__tests__": "test-folder",
+    "target": "build-folder",
+    "build": "build-folder",
+    "dist": "build-folder",
+    "out": "build-folder"
   },
   "folderNamesExpanded": {
     "src": "source-folder-open",
+    "source": "source-folder-open",
+    "sources": "source-folder-open",
     "main": "source-folder-open",
     "java": "source-folder-open",
     "kotlin": "source-folder-open",
-    "test": "source-folder-open",
-    "tests": "source-folder-open",
-    "resources": "resource-folder-open",
-    "public": "resource-folder-open",
-    "assets": "resource-folder-open",
-    "target": "build-folder-open",
-    "build": "build-folder-open",
-    "dist": "build-folder-open",
+    "controller": "controller-folder-open",
+    "controllers": "controller-folder-open",
+    "rest": "controller-folder-open",
+    "api": "controller-folder-open",
+    "service": "service-folder-open",
+    "services": "service-folder-open",
+    "repository": "repository-folder-open",
+    "repositories": "repository-folder-open",
+    "entity": "entity-folder-open",
+    "entities": "entity-folder-open",
+    "model": "entity-folder-open",
+    "models": "entity-folder-open",
+    "domain": "entity-folder-open",
+    "enty": "entity-folder-open",
+    "dto": "dto-folder-open",
+    "dtos": "dto-folder-open",
+    "mapper": "mapper-folder-open",
+    "mappers": "mapper-folder-open",
+    "mapping": "mapper-folder-open",
+    "mappings": "mapper-folder-open",
+    "config": "config-folder-open",
+    "configs": "config-folder-open",
+    "configuration": "config-folder-open",
+    "configurations": "config-folder-open",
     ".git": "config-folder-open",
     ".vscode": "config-folder-open",
     ".idea": "config-folder-open",
     ".mvn": "config-folder-open",
-    ".gradle": "config-folder-open"
+    ".gradle": "config-folder-open",
+    ".openidea": "config-folder-open",
+    "security": "security-folder-open",
+    "sercurity": "security-folder-open",
+    "auth": "security-folder-open",
+    "authentication": "security-folder-open",
+    "authorization": "security-folder-open",
+    "resource": "resource-folder-open",
+    "resources": "resource-folder-open",
+    "assets": "resource-folder-open",
+    "public": "resource-folder-open",
+    "static": "resource-folder-open",
+    "data": "database-folder-open",
+    "database": "database-folder-open",
+    "databases": "database-folder-open",
+    "db": "database-folder-open",
+    "mysql_data": "database-folder-open",
+    "mysql-data": "database-folder-open",
+    "redis_data": "database-folder-open",
+    "redis-data": "database-folder-open",
+    "mysql": "database-folder-open",
+    "redis": "database-folder-open",
+    "migrations": "database-folder-open",
+    "migration": "database-folder-open",
+    "seed": "database-folder-open",
+    "seeds": "database-folder-open",
+    "doc": "docs-folder-open",
+    "docs": "docs-folder-open",
+    "document": "docs-folder-open",
+    "documents": "docs-folder-open",
+    "documentation": "docs-folder-open",
+    "agent": "ai-folder-open",
+    "agents": "ai-folder-open",
+    ".agent": "ai-folder-open",
+    ".agents": "ai-folder-open",
+    "codex": "ai-folder-open",
+    ".codex": "ai-folder-open",
+    "claude": "ai-folder-open",
+    ".claude": "ai-folder-open",
+    "ai": "ai-folder-open",
+    ".ai": "ai-folder-open",
+    "test": "test-folder-open",
+    "tests": "test-folder-open",
+    "__tests__": "test-folder-open",
+    "target": "build-folder-open",
+    "build": "build-folder-open",
+    "dist": "build-folder-open",
+    "out": "build-folder-open"
   },
   "fileExtensions": {
     "java": "java",
@@ -263,5 +555,178 @@
     "shellscript": "shell",
     "dockerfile": "docker",
     "gitignore": "git"
+  },
+  "light": {
+    "folder": "folder-light",
+    "folderExpanded": "folder-open-light",
+    "rootFolderExpanded": "folder-open-light",
+    "folderNames": {
+      "src": "source-folder-light",
+      "source": "source-folder-light",
+      "sources": "source-folder-light",
+      "main": "source-folder-light",
+      "java": "source-folder-light",
+      "kotlin": "source-folder-light",
+      "controller": "controller-folder-light",
+      "controllers": "controller-folder-light",
+      "rest": "controller-folder-light",
+      "api": "controller-folder-light",
+      "service": "service-folder-light",
+      "services": "service-folder-light",
+      "repository": "repository-folder-light",
+      "repositories": "repository-folder-light",
+      "entity": "entity-folder-light",
+      "entities": "entity-folder-light",
+      "model": "entity-folder-light",
+      "models": "entity-folder-light",
+      "domain": "entity-folder-light",
+      "enty": "entity-folder-light",
+      "dto": "dto-folder-light",
+      "dtos": "dto-folder-light",
+      "mapper": "mapper-folder-light",
+      "mappers": "mapper-folder-light",
+      "mapping": "mapper-folder-light",
+      "mappings": "mapper-folder-light",
+      "config": "config-folder-light",
+      "configs": "config-folder-light",
+      "configuration": "config-folder-light",
+      "configurations": "config-folder-light",
+      ".git": "config-folder-light",
+      ".vscode": "config-folder-light",
+      ".idea": "config-folder-light",
+      ".mvn": "config-folder-light",
+      ".gradle": "config-folder-light",
+      ".openidea": "config-folder-light",
+      "security": "security-folder-light",
+      "sercurity": "security-folder-light",
+      "auth": "security-folder-light",
+      "authentication": "security-folder-light",
+      "authorization": "security-folder-light",
+      "resource": "resource-folder-light",
+      "resources": "resource-folder-light",
+      "assets": "resource-folder-light",
+      "public": "resource-folder-light",
+      "static": "resource-folder-light",
+      "data": "database-folder-light",
+      "database": "database-folder-light",
+      "databases": "database-folder-light",
+      "db": "database-folder-light",
+      "mysql_data": "database-folder-light",
+      "mysql-data": "database-folder-light",
+      "redis_data": "database-folder-light",
+      "redis-data": "database-folder-light",
+      "mysql": "database-folder-light",
+      "redis": "database-folder-light",
+      "migrations": "database-folder-light",
+      "migration": "database-folder-light",
+      "seed": "database-folder-light",
+      "seeds": "database-folder-light",
+      "doc": "docs-folder-light",
+      "docs": "docs-folder-light",
+      "document": "docs-folder-light",
+      "documents": "docs-folder-light",
+      "documentation": "docs-folder-light",
+      "agent": "ai-folder-light",
+      "agents": "ai-folder-light",
+      ".agent": "ai-folder-light",
+      ".agents": "ai-folder-light",
+      "codex": "ai-folder-light",
+      ".codex": "ai-folder-light",
+      "claude": "ai-folder-light",
+      ".claude": "ai-folder-light",
+      "ai": "ai-folder-light",
+      ".ai": "ai-folder-light",
+      "test": "test-folder-light",
+      "tests": "test-folder-light",
+      "__tests__": "test-folder-light",
+      "target": "build-folder-light",
+      "build": "build-folder-light",
+      "dist": "build-folder-light",
+      "out": "build-folder-light"
+    },
+    "folderNamesExpanded": {
+      "src": "source-folder-open-light",
+      "source": "source-folder-open-light",
+      "sources": "source-folder-open-light",
+      "main": "source-folder-open-light",
+      "java": "source-folder-open-light",
+      "kotlin": "source-folder-open-light",
+      "controller": "controller-folder-open-light",
+      "controllers": "controller-folder-open-light",
+      "rest": "controller-folder-open-light",
+      "api": "controller-folder-open-light",
+      "service": "service-folder-open-light",
+      "services": "service-folder-open-light",
+      "repository": "repository-folder-open-light",
+      "repositories": "repository-folder-open-light",
+      "entity": "entity-folder-open-light",
+      "entities": "entity-folder-open-light",
+      "model": "entity-folder-open-light",
+      "models": "entity-folder-open-light",
+      "domain": "entity-folder-open-light",
+      "enty": "entity-folder-open-light",
+      "dto": "dto-folder-open-light",
+      "dtos": "dto-folder-open-light",
+      "mapper": "mapper-folder-open-light",
+      "mappers": "mapper-folder-open-light",
+      "mapping": "mapper-folder-open-light",
+      "mappings": "mapper-folder-open-light",
+      "config": "config-folder-open-light",
+      "configs": "config-folder-open-light",
+      "configuration": "config-folder-open-light",
+      "configurations": "config-folder-open-light",
+      ".git": "config-folder-open-light",
+      ".vscode": "config-folder-open-light",
+      ".idea": "config-folder-open-light",
+      ".mvn": "config-folder-open-light",
+      ".gradle": "config-folder-open-light",
+      ".openidea": "config-folder-open-light",
+      "security": "security-folder-open-light",
+      "sercurity": "security-folder-open-light",
+      "auth": "security-folder-open-light",
+      "authentication": "security-folder-open-light",
+      "authorization": "security-folder-open-light",
+      "resource": "resource-folder-open-light",
+      "resources": "resource-folder-open-light",
+      "assets": "resource-folder-open-light",
+      "public": "resource-folder-open-light",
+      "static": "resource-folder-open-light",
+      "data": "database-folder-open-light",
+      "database": "database-folder-open-light",
+      "databases": "database-folder-open-light",
+      "db": "database-folder-open-light",
+      "mysql_data": "database-folder-open-light",
+      "mysql-data": "database-folder-open-light",
+      "redis_data": "database-folder-open-light",
+      "redis-data": "database-folder-open-light",
+      "mysql": "database-folder-open-light",
+      "redis": "database-folder-open-light",
+      "migrations": "database-folder-open-light",
+      "migration": "database-folder-open-light",
+      "seed": "database-folder-open-light",
+      "seeds": "database-folder-open-light",
+      "doc": "docs-folder-open-light",
+      "docs": "docs-folder-open-light",
+      "document": "docs-folder-open-light",
+      "documents": "docs-folder-open-light",
+      "documentation": "docs-folder-open-light",
+      "agent": "ai-folder-open-light",
+      "agents": "ai-folder-open-light",
+      ".agent": "ai-folder-open-light",
+      ".agents": "ai-folder-open-light",
+      "codex": "ai-folder-open-light",
+      ".codex": "ai-folder-open-light",
+      "claude": "ai-folder-open-light",
+      ".claude": "ai-folder-open-light",
+      "ai": "ai-folder-open-light",
+      ".ai": "ai-folder-open-light",
+      "test": "test-folder-open-light",
+      "tests": "test-folder-open-light",
+      "__tests__": "test-folder-open-light",
+      "target": "build-folder-open-light",
+      "build": "build-folder-open-light",
+      "dist": "build-folder-open-light",
+      "out": "build-folder-open-light"
+    }
   }
 }

@@ -24,14 +24,16 @@
 
 ## Overview
 
-IDEA-inspired Workspace brings a coordinated dark theme, file icons, product icons, Java semantic highlighting, and optional title-bar customization to Visual Studio Code. The extension keeps the native menus, panels, editor layout, and keyboard workflows.
+IDEA-inspired Workspace brings coordinated Dark and optional Light themes, file icons, product icons, Java semantic highlighting, and optional title-bar customization to Visual Studio Code. The extension keeps the native menus, panels, editor layout, and keyboard workflows.
 
-This source tree contains version **0.6.0**. See [GitHub Releases](https://github.com/nhpo1995/vscodeIDEA/releases) for available releases and downloadable VSIX packages.
+This source tree contains version **0.7.0**. See [GitHub Releases](https://github.com/nhpo1995/vscodeIDEA/releases) for available releases and downloadable VSIX packages.
 
 ## Features
 
-- **IDEA-inspired Dark theme** with a neutral editor background and coordinated syntax colors.
+- **Two bundled themes**: **IDEA-inspired Dark** combines charcoal cards with a jade gradient frame; optional **IDEA-inspired Light** combines light cards with a pale mint gradient. Select either with **Preferences: Color Theme**; setup and Apply preserve your current color theme. External themes keep their native colors and the same rounded, borderless layout.
+- **Right tool rail** on recognized desktop workbench builds shows native Secondary Side Bar containers, including extension views moved there with VS Code’s own view actions. Its space is reserved by the native grid, and the buttons open/close real native views. Original workbench JavaScript stays unchanged; hash-named runtime copies and the owned startup redirect are removed by Restore. Unrecognized builds retain their native toolbar.
 - **Compact native navigation** with a hamburger menu on Windows/Linux, sidebar and Quick Input styling, and a project switcher in the status bar using VS Code's Open Recent.
+- **Compact title-bar search** keeps the native magnifier and workspace name visible in a centered control up to 240px wide. Click it or press double Shift to open full-size native Quick Input; neighboring controls stay fixed. On narrow windows it uses the available space between native title-bar actions.
 - **Double-Shift Quick Search** opens native Quick Open: type a filename, `>` for commands, `#` for workspace symbols, or `@` for symbols in the active file. Terminal shortcuts are preserved.
 - **Coordinated terminal colors** with a complete 16-color ANSI palette, cursor and selections. Application log colors require ANSI output from the application; the theme controls the palette, not log-level detection.
 - **Automatic editor and terminal typography** uses JetBrains Mono at 14px, with 1.2 terminal line spacing. The original font is bundled and installed for the current desktop user when missing; an existing Nerd Font variant is preferred in the terminal. Later user edits are preserved on upgrades.
@@ -39,6 +41,7 @@ This source tree contains version **0.6.0**. See [GitHub Releases](https://githu
 - **Product icon theme** with 24 original glyphs for project and symbol views.
 - **Java semantic highlighting** for types, methods, and readonly `UPPER_CASE` constants when a Java language server provides semantic tokens.
 - **Optional title-bar logo and workbench styling** with Apply and Restore commands.
+- **Window controls** on supported custom title bars: keep Customize Layout and show Minimize, Maximize/Restore and Close at all times. Borderless buttons have transparent backgrounds and theme-aware color feedback on hover/focus, with red for Close; native window actions are retained.
 - **Logo selection** from a local SVG or PNG file.
 - **Upgrade-safe settings** that preserve your later edits across automatic upgrades.
 - **CSS recovery and reload status** with a native Reload Window action when the workbench needs to load updated styling.
@@ -56,10 +59,10 @@ This source tree contains version **0.6.0**. See [GitHub Releases](https://githu
 You can also install from a terminal:
 
 ```sh
-code --install-extension ./idea-workspace-0.6.0.vsix
+code --install-extension ./idea-workspace-0.7.0.vsix
 ```
 
-Replace the filename with the version you downloaded. After installation, the theme and icon themes apply automatically when the extension activates.
+Replace the filename with the version you downloaded. After installation, icon and font presets apply when the extension activates; your current color theme is preserved. Select IDEA-inspired Dark or IDEA-inspired Light in Preferences: Color Theme to use a bundled palette.
 
 ### Bundled font
 
@@ -74,9 +77,11 @@ JetBrains Mono is licensed separately under SIL OFL 1.1. Its copyright and compl
 VS Code does not expose an API for changing the application title-bar logo or injecting custom workbench CSS. The extension can patch the installed VS Code workbench to provide those optional appearance changes.
 
 - On Linux installations that require administrator access, the extension requests authentication through the operating system's PolicyKit dialog (`pkexec`). It does not ask you to enter a password in the terminal or change installation permissions.
+- If VS Code runs with `NoNewPrivs`, authorization is requested through a temporary systemd user-session task, still using the same PolicyKit dialog. The task is time-limited and removed when it finishes; no persistent service is installed. This route requires a working systemd user session and graphical PolicyKit authentication agent.
 - Automatic elevation for this patch is implemented for Linux. On Windows and macOS, the theme and icon themes work, but equivalent automatic elevation for the workbench patch is not currently provided.
 - After applying the workbench patch, choose **Reload Window** when prompted to load the updated CSS. You can also use **IDEA Workspace: Reload Window to Load UI** from the Command Palette.
 - Cancelling authentication leaves the theme and icon themes available. Use **IDEA Workspace: Apply UI and Logo** to try the optional patch again.
+- Cancelled, unavailable and timed-out authorization are reported separately. A failed attempt is not repeatedly prompted on every startup; a new authorization implementation may retry an older failed attempt once. Explicit Restore still pauses automatic setup.
 
 ### Restore changes
 
@@ -88,7 +93,7 @@ Open the Command Palette and search for **IDEA Workspace**:
 
 | Command | Purpose |
 | --- | --- |
-| `IDEA Workspace: Apply UI and Logo` | Reapply the extension presets for the theme, icons, UI colors, and logo. Use this to return to the extension's appearance settings. |
+| `IDEA Workspace: Apply UI and Logo` | Reapply icons, fonts, UI colors, native card layout where available, and logo while preserving the selected color theme. |
 | `IDEA Workspace: Open Setup` | Open the setup menu. |
 | `IDEA Workspace: Choose Logo (SVG or PNG)` | Choose a new logo; the extension applies it automatically. |
 | `IDEA Workspace: Quick Search` | Open native Quick Open, also available with double Shift outside the terminal. |
@@ -102,9 +107,17 @@ The `ideaWorkspace.logoPath` setting accepts an absolute path to a local SVG or 
 
 ### Navigation preferences
 
-Set `ideaWorkspace.navigation.enabled` to `false` to disable the compact layout, project control and double-Shift shortcut while retaining the theme, fonts and icon themes. Disabling it restores layout settings still managed by the extension. Changed custom CSS may require a window reload. Switching between native and custom title bars can require fully quitting and reopening VS Code. Restore pauses navigation as well as automatic appearance setup until Apply is used again.
+Set `ideaWorkspace.navigation.enabled` to `false` to disable compact navigation, the project control and double-Shift shortcut while retaining the base gradient, native cards, theme, fonts and icon themes. Disabling it restores navigation layout settings still managed by the extension. Changed custom CSS may require a window reload. Switching between native and custom title bars can require fully quitting and reopening VS Code. Restore pauses navigation as well as automatic appearance setup until Apply is used again.
 
 Quick Search keeps VS Code's existing search modes and results. Quick Open, Command Palette and Open Recent share the styled Quick Input UI; this does not add IntelliJ search tabs or a custom search engine. The project picker opens VS Code's existing recent folders/workspaces. Third-party views stay in their native containers and can be moved using VS Code's layout controls. Native macOS application menus are retained.
+
+Navigation keeps the native Customize Layout button and hides the three separate layout toggles. On Windows/Linux where `window.controlsStyle` is available, it selects VS Code's custom controls so they can be styled; changing this option can require fully quitting and reopening VS Code. All three window buttons remain visible with fixed hit targets. Hover/focus changes the icon color without adding a background or border. Tab or the arrow keys moves through them and Enter/Space activates the focused native button. Native OS controls and unsupported title bars remain unchanged. Disable navigation or Restore to return extension-managed preferences, preserving later user edits.
+
+### Theme and base layout
+
+The title bar, navigation rail and status bar share one continuous gradient frame derived from the active theme. Text and navigation icons use matching frame foregrounds, including light-theme selected, hover, focus and URI icons. Native content cards have no visible outer stroke; their reserved transparent edges expose a 6px visual gutter without changing native content bounds. Editor, sidebar, panel, menus and search surfaces follow that theme, including Dark+ and Dracula. Apply keeps your selected theme, including on first setup. To use the bundled palette, select **IDEA-inspired Dark** in **Preferences: Color Theme**.
+
+Where VS Code registers `workbench.experimental.modernUI`, Apply enables its native rounded cards and gutters. VS Code calculates content bounds and resize handles. Older builds without this capability retain their native layout with the themed frame; the extension does not simulate gutters using CSS offsets. Restore returns the native layout preference when it is still extension-managed and removes the custom frame after reload.
 
 ## Java highlighting
 
@@ -118,6 +131,7 @@ The file icon theme classifies files by extension and filename. It does not insp
 - Theme and icon themes use VS Code extension APIs. The optional workbench CSS and logo patch modifies files in the VS Code installation, is shared across profiles, and may trigger VS Code's installation-integrity warning.
 - A VS Code update may replace the patched files. The extension attempts to reapply the patch once after an update; you can also use Apply to retry.
 - Native title-bar behavior varies by operating system and title-bar mode. The extension does not change the taskbar icon or Activity Bar logo.
+- The right tool rail has been verified on Linux with VS Code 1.145.2, including Claude Code and Codex login views. It depends on recognized internal workbench structures; unsupported builds retain the native toolbar. Windows/macOS rail behavior and authenticated AI requests have not been verified.
 - The supplied icons are original assets inspired by the reference style; they are not a complete copy of IntelliJ icons.
 - No telemetry is sent by this project.
 
