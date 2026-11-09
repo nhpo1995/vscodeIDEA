@@ -1,5 +1,8 @@
 node_modules/
 dist/
 *.vsix
-/superpowers/
+.superpowers/
 /docs/superpowers/
+.agents/
+.aws/
+.codex/

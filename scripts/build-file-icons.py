@@ -13,7 +13,7 @@ def svg(name,body,color=GRAY):
     icons[name]={'iconPath':'../media/files/'+name+'.svg'}
     text=f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke="{color}" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">{body}</svg>\n'
     (OUT/(name+'.svg')).write_text(text)
-def sheet(body='',color=GRAY):
+def sheet(body=''):
     return '<path d="M3 1.5h6l4 4v9H3zM9 1.5v4h4"/>'+body
 
 # Centered semantic marks; paired folder silhouettes preserve meaning when expanded.

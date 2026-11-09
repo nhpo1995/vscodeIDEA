@@ -18,7 +18,7 @@ export async function activate(context:vscode.ExtensionContext):Promise<void>{
  const status=vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left,1);
  context.subscriptions.push(output,status,registerConstantHighlighting());
  const navigation=registerNavigation(),menu=registerMenu(async()=>{
-  if(navigationEnabled())await applySettings(host,{'window.menuBarVisibility':'classic'});
+  if(navigationEnabled()){await applySettings(host,{'window.menuBarVisibility':'classic'});}
  });context.subscriptions.push(navigation,menu);
  const setNavigation=async(enabled:boolean)=>{menu.setEnabled(enabled);await navigation.setEnabled(enabled);};
  const navigationEnabled=()=>!context.globalState.get<boolean>('autoUiDisabled') && vscode.workspace.getConfiguration('ideaWorkspace').get<boolean>('navigation.enabled',true);
@@ -35,7 +35,7 @@ export async function activate(context:vscode.ExtensionContext):Promise<void>{
  const updateNavigation=async(mode:ApplyMode)=>{
   const enabled=navigationEnabled();
   if(!context.globalState.get<boolean>('autoUiDisabled')){
-   if(enabled)await applySettings(host,layoutSettings,mode);
+   if(enabled){await applySettings(host,layoutSettings,mode);}
    else await restoreSettings(host,key=>Object.hasOwn(layoutSettings,key));
    await context.globalState.update('navigationLayoutEnabled',enabled);
   }
@@ -43,7 +43,7 @@ export async function activate(context:vscode.ExtensionContext):Promise<void>{
  };
  const css=async()=>{
   const file=vscode.workspace.getConfiguration('ideaWorkspace').get<string>('logoPath','');
-  if(file && !path.isAbsolute(file))throw Error('Logo path must be absolute.');
+  if(file && !path.isAbsolute(file)){throw new Error('Logo path must be absolute.');}
   return renderCss(await logoDataUri(file||context.asAbsolutePath('media/logo-dark.svg')),false,false,navigationEnabled());
  };
  const readWorkbench=async()=>{
@@ -57,12 +57,12 @@ export async function activate(context:vscode.ExtensionContext):Promise<void>{
   const railCandidate=navigationEnabled() && vscode.env.uiKind===vscode.UIKind.Desktop?await fs.readFile(context.asAbsolutePath('dist/nativeRailRenderer.js'),'utf8'):undefined;
   const rail=railCandidate && await nativeRailSupported(installed.target,railCandidate)?railCandidate:undefined;
   const snapshot=inspectChrome(installed.html,style,installed.target,vscode.version,renderer,rail);
-  if(rail && snapshot.state==='current' && !await nativeRailAssetsValid(installed.target,rail))snapshot.state='outdated';
-  if(renderer && snapshot.state==='current' && !await rendererAssetValid(installed.target,renderer))snapshot.state='outdated';
+  if(rail && snapshot.state==='current' && !await nativeRailAssetsValid(installed.target,rail)){snapshot.state='outdated';}
+  if(renderer && snapshot.state==='current' && !await rendererAssetValid(installed.target,renderer)){snapshot.state='outdated';}
   return {...installed,style,renderer,rail,desiredError,snapshot};
  };
  const readChrome=async()=>{
-  const state=await readChromeStatus();if(state.desiredError)throw Error(state.desiredError);return state;
+  const state=await readChromeStatus();if(state.desiredError){throw new Error(state.desiredError);}return state;
  };
  const pendingMatches=(pending:PendingReload|undefined,state:Awaited<ReturnType<typeof readChrome>>)=>
   pending?.action==='restore'?state.snapshot.state==='missing':state.snapshot.state==='current' && pending?.cssHash===state.snapshot.cssHash;
@@ -90,7 +90,7 @@ export async function activate(context:vscode.ExtensionContext):Promise<void>{
  };
  let busy=false;
  const guarded=(action:()=>Promise<void>)=>async()=>{
-  if(busy)return;
+  if(busy){return;}
   busy=true;
   try{await action();}catch(error){
    const message=error instanceof Error?error.message:String(error);output.appendLine(message);
@@ -99,21 +99,22 @@ export async function activate(context:vscode.ExtensionContext):Promise<void>{
  };
  let fontSetup:Promise<void>|undefined;
  const prepareFonts=():Promise<void>=>{
-  if(vscode.env.uiKind!==vscode.UIKind.Desktop)return Promise.resolve();
-  return fontSetup??=(async()=>{
+  if(vscode.env.uiKind!==vscode.UIKind.Desktop){return Promise.resolve();}
+  fontSetup??=(async()=>{
    try{
     const result=await ensureFontInstalled({sourceDir:context.asAbsolutePath('fonts/jetbrains-mono')});
     await context.globalState.update('fontStatus',result);
     output.appendLine('JetBrains Mono: '+result.state+(result.directory?' — '+result.directory:''));
-    if(result.state==='installed')void vscode.window.showInformationMessage('JetBrains Mono installed for your user account. Fully quit and reopen VS Code if the new font is not visible. Restore leaves the installed font available to other applications.');
+    if(result.state==='installed'){void vscode.window.showInformationMessage('JetBrains Mono installed for your user account. Fully quit and reopen VS Code if the new font is not visible. Restore leaves the installed font available to other applications.');}
    }catch(error){
     const message=error instanceof Error?error.message:String(error);
     const previous=context.globalState.get<{state:string;error?:string}>('fontStatus');
     await context.globalState.update('fontStatus',{state:'failed',error:message});
     output.appendLine('JetBrains Mono installation failed: '+message);
-    if(previous?.error!==message)void vscode.window.showWarningMessage('JetBrains Mono could not be installed. Appearance uses font fallbacks. Run IDEA Workspace: Install or Retry Font Setup to retry. Details are in the IDEA Workspace output.');
+    if(previous?.error!==message){void vscode.window.showWarningMessage('JetBrains Mono could not be installed. Appearance uses font fallbacks. Run IDEA Workspace: Install or Retry Font Setup to retry. Details are in the IDEA Workspace output.');}
    }
   })();
+  return fontSetup;
  };
  const appearance=async(mode:ApplyMode)=>{
   await prepareFonts();
@@ -122,11 +123,11 @@ export async function activate(context:vscode.ExtensionContext):Promise<void>{
   const kept=await applySettings(host,desired,mode);
   const theme=JSON.parse(await fs.readFile(context.asAbsolutePath('themes/idea-dark.json'),'utf8'));
   kept.push(...await applyPalette(host,theme.colors,mode));
-  if(kept.length)output.appendLine('Kept user customizations on upgrade: '+kept.join(', '));
+  if(kept.length){output.appendLine('Kept user customizations on upgrade: '+kept.join(', '));}
  };
  const permissionError=(error:unknown)=>['EACCES','EPERM','EROFS'].includes((error as NodeJS.ErrnoException).code??'');
  const elevate=async(target:string,style:string,operation:'apply'|'restore',renderer?:string,rail?:string)=>{
-  if(process.platform!=='linux')throw Error('API appearance is independent. Automatic administrator authentication for custom chrome is supported on Linux only.');
+  if(process.platform!=='linux'){throw new Error('API appearance is independent. Automatic administrator authentication for custom chrome is supported on Linux only.');}
   const scripts=await prepareAdminScripts(target,context.globalStorageUri.fsPath,style,vscode.version,operation,renderer,rail);
   output.appendLine(`Requesting OS authorization to ${operation} owned CSS in ${target}. Installation permissions are unchanged.`);
   try{
@@ -140,26 +141,26 @@ export async function activate(context:vscode.ExtensionContext):Promise<void>{
  };
  const requestReload=guarded(async()=>{
   const pending=context.globalState.get<PendingReload>('pendingReload');
-  if(pending)await context.globalState.update('pendingReload',{...pending,reloadRequested:true});
+  if(pending){await context.globalState.update('pendingReload',{...pending,reloadRequested:true});}
   try{await vscode.commands.executeCommand('workbench.action.reloadWindow');}
-  catch(error){if(pending)await context.globalState.update('pendingReload',pending);throw error;}
+  catch(error){if(pending){await context.globalState.update('pendingReload',pending);}throw error;}
  });
- const reloadNotice=(message:string)=>void vscode.window.showInformationMessage(message+' Reload this window to load the CSS.','Reload Window').then(choice=>{if(choice)void requestReload();});
+ const reloadNotice=(message:string)=>void vscode.window.showInformationMessage(message+' Reload this window to load the CSS.','Reload Window').then(choice=>{if(choice){void requestReload();}});
  const patch=async()=>{
-  if(vscode.env.uiKind!==vscode.UIKind.Desktop)return false;
+  if(vscode.env.uiKind!==vscode.UIKind.Desktop){return false;}
   const state=await readChrome();
-  if(state.snapshot.state==='damaged')throw Error('Custom UI markers are damaged. Automatic modification is blocked. Open diagnostics.');
-  if(state.snapshot.state==='current')return false;
+  if(state.snapshot.state==='damaged'){throw new Error('Custom UI markers are damaged. Automatic modification is blocked. Open diagnostics.');}
+  if(state.snapshot.state==='current'){return false;}
   await context.globalState.update('chromeAttempt',{fingerprint:state.snapshot.fingerprint,outcome:'attempting',authorizationRevision} satisfies ChromeAttempt);
   try{
    let changed:boolean;
    try{changed=await applyPatch(state.target,path.join(context.globalStorageUri.fsPath,'backups'),state.style,vscode.version,state.renderer,state.rail);}
-   catch(error){if(!permissionError(error))throw error;await elevate(state.target,state.style,'apply',state.renderer,state.rail);changed=true;}
+   catch(error){if(!permissionError(error)){throw error;}await elevate(state.target,state.style,'apply',state.renderer,state.rail);changed=true;}
    const after=await readChrome();
-   if(after.snapshot.state!=='current')throw Error('CSS verification after installation failed. Open diagnostics.');
+   if(after.snapshot.state!=='current'){throw new Error('CSS verification after installation failed. Open diagnostics.');}
    await context.globalState.update('chromeAttempt',{fingerprint:after.snapshot.fingerprint,outcome:'applied',authorizationRevision} satisfies ChromeAttempt);
    await context.globalState.update('customUiRequested',true);
-   if(changed)await context.globalState.update('pendingReload',{cssHash:after.snapshot.cssHash,session:vscode.env.sessionId,action:'apply'} satisfies PendingReload);
+   if(changed){await context.globalState.update('pendingReload',{cssHash:after.snapshot.cssHash,session:vscode.env.sessionId,action:'apply'} satisfies PendingReload);}
    return changed;
   }catch(error){
    await context.globalState.update('chromeAttempt',{fingerprint:state.snapshot.fingerprint,outcome:'failed',authorizationRevision,error:error instanceof Error?error.message:String(error)} satisfies ChromeAttempt);
@@ -172,14 +173,14 @@ export async function activate(context:vscode.ExtensionContext):Promise<void>{
   await appearance('explicit');await context.globalState.update('appearanceVersion',version);await context.globalState.update('appearanceRevision',appearanceRevision);
   await context.globalState.update('navigationLayoutEnabled',navigationEnabled());
   await setNavigation(navigationEnabled());
-  if(await patch())reloadNotice('Custom CSS installed on disk.');
+  if(await patch()){reloadNotice('Custom CSS installed on disk.');}
  });
  const installFonts=guarded(async()=>{fontSetup=undefined;await prepareFonts();});
  const restore=guarded(async()=>{
   await context.globalState.update('autoUiDisabled',true);
   await setNavigation(false);
   const state=await readWorkbench();let changed:boolean;
-  try{changed=await restorePatch(state.target);}catch(error){if(!permissionError(error))throw error;await elevate(state.target,'','restore');changed=true;}
+  try{changed=await restorePatch(state.target);}catch(error){if(!permissionError(error)){throw error;}await elevate(state.target,'','restore');changed=true;}
   const pending=context.globalState.get<PendingReload>('pendingReload');
   if(changed || pending){
    await context.globalState.update('pendingReload',{cssHash:inspectChrome(state.html,'',state.target,vscode.version).cssHash,session:vscode.env.sessionId,action:'restore'} satisfies PendingReload);
@@ -187,23 +188,26 @@ export async function activate(context:vscode.ExtensionContext):Promise<void>{
   const skipped=await restoreSettings(host);
   await context.globalState.update('navigationLayoutEnabled',false);
   await context.globalState.update('customUiRequested',false);await context.globalState.update('chromeAttempt',undefined);
-  if(changed || pending)reloadNotice('Owned CSS removed and appearance settings restored.');
+  if(changed || pending){reloadNotice('Owned CSS removed and appearance settings restored.');}
   else void vscode.window.showInformationMessage('Appearance settings restored. Owned CSS was already absent.');
-  if(skipped.length)output.appendLine('Preserved later setting edits: '+skipped.join(', '));
+  if(skipped.length){output.appendLine('Preserved later setting edits: '+skipped.join(', '));}
  });
  const selectLogo=guarded(async()=>{
   const files=await vscode.window.showOpenDialog({canSelectMany:false,filters:{Logo:['svg','png']},title:'Choose NhpDev titlebar logo'});
-  if(!files?.length)return;
-  if(files[0].scheme!=='file')throw Error('Choose a local logo.');
+  if(!files?.length){return;}
+  if(files[0].scheme!=='file'){throw new Error('Choose a local logo.');}
   await logoDataUri(files[0].fsPath);
   await vscode.workspace.getConfiguration('ideaWorkspace').update('logoPath',files[0].fsPath,vscode.ConfigurationTarget.Global);
-  if(await patch())reloadNotice('New logo CSS installed on disk.');
+  if(await patch()){reloadNotice('New logo CSS installed on disk.');}
  });
  const diagnose=guarded(async()=>{
   const state=await readChromeStatus();let writable=true;
   try{await fs.access(path.dirname(state.target),constants.W_OK);await fs.access(state.target,constants.W_OK);}catch{writable=false;}
   output.clear();output.appendLine(`VS Code ${vscode.version}; ${process.platform}\nWorkbench: ${state.target}\nWritable: ${writable}\nDesired CSS: ${state.desiredError??state.snapshot.state}\nFingerprint: ${state.snapshot.fingerprint}`);
-  output.appendLine('Native tool rail: '+(state.rail?'recognized desktop layout; assets verified on disk':navigationEnabled()?'unavailable for this native layout; original toolbar retained':'disabled'));
+  let railStatus='disabled';
+  if(navigationEnabled())railStatus='unavailable for this native layout; original toolbar retained';
+  if(state.rail)railStatus='recognized desktop layout; assets verified on disk';
+  output.appendLine('Native tool rail: '+railStatus);
   output.appendLine('Last attempt: '+JSON.stringify(context.globalState.get('chromeAttempt')));
   output.appendLine('Pending reload: '+JSON.stringify(context.globalState.get('pendingReload')));
   output.appendLine('Font setup: '+JSON.stringify(context.globalState.get('fontStatus')));
@@ -213,7 +217,7 @@ export async function activate(context:vscode.ExtensionContext):Promise<void>{
  });
  const setup=async()=>{
   const choice=await vscode.window.showQuickPick([
-   {label:status.text,description:status.tooltip?.toString(),id:'diagnose'},
+   {label:status.text,description:typeof status.tooltip==='string'?status.tooltip:status.tooltip?.value,id:'diagnose'},
    {label:'Apply UI and Logo',description:'Explicitly reapply appearance and retry custom chrome',id:'apply'},
    {label:'Reload Window',description:'Load changed CSS from disk',id:'reload'},
    {label:'Choose Logo',id:'selectLogo'},
@@ -223,43 +227,48 @@ export async function activate(context:vscode.ExtensionContext):Promise<void>{
    {label:'Diagnose UI and Logo',id:'diagnose'},
    {label:'Restore UI and Settings',id:'restore'}
   ],{title:'IDEA Workspace — appearance only'});
-  if(choice)await vscode.commands.executeCommand('ideaWorkspace.'+choice.id);
+  if(choice){await vscode.commands.executeCommand('ideaWorkspace.'+choice.id);}
  };
  for(const [id,handler] of Object.entries({apply,restore,installFonts,selectLogo,setup,diagnose,reload:requestReload}))context.subscriptions.push(vscode.commands.registerCommand('ideaWorkspace.'+id,handler));
  let layoutTimer:ReturnType<typeof setTimeout>|undefined,disposed=false;
  const scheduleLayout=()=>{
-  if(disposed)return;
-  if(layoutTimer)clearTimeout(layoutTimer);
+  if(disposed){return;}
+  if(layoutTimer){clearTimeout(layoutTimer);}
   layoutTimer=setTimeout(()=>{
    layoutTimer=undefined;
    if(busy){scheduleLayout();return;}
    void guarded(async()=>{
     await updateNavigation('explicit');
-    if(context.globalState.get<boolean>('autoUiDisabled'))return;
-    if(await patch())reloadNotice('Navigation styling updated on disk.');
+    if(context.globalState.get<boolean>('autoUiDisabled')){return;}
+    if(await patch()){reloadNotice('Navigation styling updated on disk.');}
    })();
   },100);
  };
- context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(event=>{if(event.affectsConfiguration('ideaWorkspace.navigation.enabled'))scheduleLayout();}),new vscode.Disposable(()=>{disposed=true;if(layoutTimer)clearTimeout(layoutTimer);}));
+ context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(event=>{if(event.affectsConfiguration('ideaWorkspace.navigation.enabled')){scheduleLayout();}}),new vscode.Disposable(()=>{disposed=true;if(layoutTimer){clearTimeout(layoutTimer);}}));
+ const recoverChrome=async()=>{
+  if(await patch())reloadNotice('Custom CSS installed or recovered on disk.');
+ };
  await guarded(async()=>{
   const disabled=context.globalState.get<boolean>('autoUiDisabled');
   await setNavigation(navigationEnabled());
-  if(!disabled)await prepareFonts();
+  if(!disabled){await prepareFonts();}
   if(!disabled && (context.globalState.get<string>('appearanceVersion')!==version || context.globalState.get<string>('appearanceRevision')!==appearanceRevision)){
    const upgrade=!!context.globalState.get('appearanceVersion') || !!host.load();
    await appearance(upgrade?'upgrade':'explicit');await context.globalState.update('appearanceVersion',version);await context.globalState.update('appearanceRevision',appearanceRevision);
   }
-  if(!disabled)await updateNavigation(context.globalState.get<boolean>('navigationLayoutEnabled')===false?'explicit':'upgrade');
-  if(vscode.env.uiKind!==vscode.UIKind.Desktop)return;
+  if(!disabled){await updateNavigation(context.globalState.get<boolean>('navigationLayoutEnabled')===false?'explicit':'upgrade');}
+  if(vscode.env.uiKind!==vscode.UIKind.Desktop){return;}
   const state=await readChromeStatus(),pending=context.globalState.get<PendingReload>('pendingReload');
-  if(pending && (!pendingMatches(pending,state) || !needsReload(pending,pending.cssHash,vscode.env.sessionId)))await context.globalState.update('pendingReload',undefined);
-  if(disabled)return;
-  if(state.desiredError)throw Error(state.desiredError);
+  if(pending && (!pendingMatches(pending,state) || !needsReload(pending,pending.cssHash,vscode.env.sessionId))){await context.globalState.update('pendingReload',undefined);}
+  if(disabled){return;}
+  if(state.desiredError){throw new Error(state.desiredError);}
   if(shouldAutoApply(state.snapshot,context.globalState.get<ChromeAttempt>('chromeAttempt'),authorizationRevision)){
-   if(await patch())reloadNotice('Custom CSS installed or recovered on disk.');
+   await recoverChrome();
   }else if(state.snapshot.state==='current'){
     await context.globalState.update('chromeAttempt',{fingerprint:state.snapshot.fingerprint,outcome:'applied',authorizationRevision} satisfies ChromeAttempt);
   }
  })();
 }
-export function deactivate():void{}
+export function deactivate():void{
+ // VS Code disposes the resources registered in context.subscriptions.
+}

@@ -7,21 +7,24 @@ function hash(value:string):string{return createHash('sha256').update(value).dig
 export function inspectChrome(html:string,css:string,target:string,appVersion:string,renderer?:string,rail?:string):ChromeSnapshot{
  const start='<!-- idea-workspace:start -->',end='<!-- idea-workspace:end -->';
  const a=html.indexOf(start),b=html.indexOf(end);
- let state:ChromeSnapshot['state']='missing',clean=html;
+ let state:ChromeSnapshot['state']='missing',clean:string;
  try{clean=stripNativeStartup(html);}catch{return {state:'damaged',cssHash:hash(css),fingerprint:hash(html)};}
  if(a>=0 || b>=0){
-  if(a<0 || b<a || html.indexOf(start,a+start.length)>=0 || html.indexOf(end,b+end.length)>=0)state='damaged';
+  if(a<0 || b<a || html.includes(start,a+start.length) || html.includes(end,b+end.length)){state='damaged';}
   else{
    clean=stripNativeStartup(html.slice(0,a)+html.slice(b+end.length));
    state=html.slice(a,b+end.length)===renderPatch(css,renderer,rail)?'current':'outdated';
   }
  }
- const cssHash=hash(rail?JSON.stringify([css,renderer,rail]):renderer?JSON.stringify([css,renderer]):css);
+ let content=css;
+ if(renderer)content=JSON.stringify([css,renderer]);
+ if(rail)content=JSON.stringify([css,renderer,rail]);
+ const cssHash=hash(content);
  return {state,cssHash,fingerprint:hash(JSON.stringify([target,appVersion,hash(clean),cssHash]))};
 }
 export function shouldAutoApply(snapshot:ChromeSnapshot,last?:ChromeAttempt,currentAuthorizationRevision?:string):boolean{
  return snapshot.state!=='current' && snapshot.state!=='damaged' &&
-  (!last || last.fingerprint!==snapshot.fingerprint || last.outcome==='applied' ||
+  (last?.fingerprint!==snapshot.fingerprint || last.outcome==='applied' ||
    (last.outcome==='failed' && currentAuthorizationRevision!==undefined && last.authorizationRevision!==currentAuthorizationRevision));
 }
 export function needsReload(pending:PendingReload|undefined,cssHash:string,session:string):boolean{

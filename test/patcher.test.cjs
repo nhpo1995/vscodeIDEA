@@ -29,3 +29,26 @@ test('renderer is an external self asset, is verified on reapply and is removed 
 test('renderer CSP failure leaves HTML and assets untouched',async t=>{
  const f=await fixture(t);await assert.rejects(applyPatch(f.target,f.storage,'a{}','1','(()=>{})()'),/CSP/);assert.equal(await fs.readFile(f.target,'utf8'),html);assert.deepEqual((await fs.readdir(path.dirname(f.target))).sort(),['workbench.html']);
 });
+
+test('CSP checks require actual directive names before writing assets',async t=>{
+ const f=await fixture(t);
+ for(const policy of ["xstyle-src 'unsafe-inline'; img-src data:; script-src 'self';", "style-src 'unsafe-inline'; ximg-src data:; script-src 'self';", "style-src 'unsafe-inline'; img-src data:; xscript-src 'self';"]){
+  const original=html.replace(/content="[^"]*"/,`content="${policy}"`);
+  await fs.writeFile(f.target,original);
+  await assert.rejects(applyPatch(f.target,f.storage,'a{}','1','renderer'),/CSP/);
+  assert.equal(await fs.readFile(f.target,'utf8'),original);
+ }
+});
+
+test('CSP accepts directive whitespace and case, and honors the first duplicate directive',async t=>{
+ const f=await fixture(t);
+ const allowed="STYLE-SRC\t'SELF' 'UNSAFE-INLINE'; IMG-SRC DATA:; SCRIPT-SRC 'SELF';";
+ const original=html.replace(/content="[^"]*"/,`content="${allowed}"`);
+ await fs.writeFile(f.target,original);
+ assert.equal(await applyPatch(f.target,f.storage,'a{}','1','renderer'),true);
+ await restorePatch(f.target);
+ const duplicate=html.replace(/content="[^"]*"/,`content="style-src 'none'; ${allowed}"`);
+ await fs.writeFile(f.target,duplicate);
+ await assert.rejects(applyPatch(f.target,f.storage,'a{}','1'),/CSP/);
+ assert.equal(await fs.readFile(f.target,'utf8'),duplicate);
+});
